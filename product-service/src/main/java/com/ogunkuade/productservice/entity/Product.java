@@ -24,8 +24,6 @@ public class Product {
     private String category;
     private Boolean available;
     private Long sellerId;
-    @Lob
-    private List<byte[]> imageList;
 
 
 }

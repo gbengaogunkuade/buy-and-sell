@@ -47,51 +47,24 @@ public class ProductImageRestService {
 
 
     //POST MULTIPLE IMAGES
-    public List<ProductImageResponse> imageUploadRestComplete(Long id, MultipartFile[] my_photos) throws IOException {
-        productImageResponseList = new ArrayList<>();
-        List<byte[]> imageList = new ArrayList<>();
-        for(MultipartFile my_photo : my_photos){
-            imageList.add(my_photo.getBytes());
-        }
+    public ProductImageResponse imageUploadRest(List<byte[]> imageList, Long id) throws IOException {
+//        List<byte[]> imageList = new ArrayList<>();
 
-        for(MultipartFile my_photo : my_photos){
-            //SAVING IMAGES TO DATABASE
-            productImage = new ProductImage();
-            productImage.setName(my_photo.getOriginalFilename());
-            productImage.setType(my_photo.getContentType());
-            productImage.setProductId(id);
-            productImage.setImageList(imageList);
-            savedProductImage = productImageRepository.save(productImage);
+//        for(MultipartFile my_photo : my_photos){
+//            imageList.add(my_photo.getBytes());
+//        }
+        //SAVING IMAGES TO DATABASE
+        productImage = new ProductImage();
+        productImage.setProductId(id);
+        productImage.setImageList(imageList);
+        savedProductImage = productImageRepository.save(productImage);
 
-            productImageResponse = new ProductImageResponse();
-            productImageResponse.setId(savedProductImage.getId());
-            productImageResponse.setName(savedProductImage.getName());
-            productImageResponse.setType(savedProductImage.getType());
-            productImageResponse.setProductId(savedProductImage.getProductId());
-            productImageResponse.setImageList(savedProductImage.getImageList());
+        productImageResponse = new ProductImageResponse();
+        productImageResponse.setId(savedProductImage.getId());
+        productImageResponse.setProductId(savedProductImage.getProductId());
+        productImageResponse.setImageList(savedProductImage.getImageList());
 
-            productImageResponseList.add(productImageResponse);
-
-            //SAVING IMAGE TO LOCAL DISK
-            imageIDStr = id.toString();
-            //DEFINE AND CREATE UPLOAD_PATH
-            UPLOAD_PATH = Path.of(IMAGE_PATH + File.separator + imageIDStr);
-            if(Files.notExists(UPLOAD_PATH)){
-                Files.createDirectory(UPLOAD_PATH);
-            }
-            //DEFINE AND CREATE A LOCAL IMAGE
-            localImage = Path.of(UPLOAD_PATH + File.separator + my_photo.getOriginalFilename());
-            if(Files.exists(localImage)){
-                createLocalImage = Files.write(localImage, my_photo.getBytes());
-                nameOfCreatedLocalImage = createLocalImage.getFileName().toString();
-            } else{
-                Path emptyLocalImage = Files.createFile(localImage);
-                createLocalImage = Files.write(emptyLocalImage, my_photo.getBytes());
-                nameOfCreatedLocalImage = createLocalImage.getFileName().toString();
-            }
-        }
-
-        return productImageResponseList;
+        return productImageResponse;
     }
 
 
@@ -104,8 +77,6 @@ public class ProductImageRestService {
             savedProductImage = productImageRepository.findById(id).get();
             productImageResponse = new ProductImageResponse();
             productImageResponse.setId(savedProductImage.getId());
-            productImageResponse.setName(savedProductImage.getName());
-            productImageResponse.setType(savedProductImage.getType());
             productImageResponse.setProductId(savedProductImage.getProductId());
             productImageResponse.setImageList(savedProductImage.getImageList());
             return productImageResponse;
@@ -124,8 +95,6 @@ public class ProductImageRestService {
         for(ProductImage productImage : productImageList){
             productImageResponse = new ProductImageResponse();
             productImageResponse.setId(productImage.getId());
-            productImageResponse.setName(productImage.getName());
-            productImageResponse.setType(productImage.getType());
             productImageResponse.setProductId(productImage.getProductId());
             productImageResponse.setImageList(productImage.getImageList());
             productImageResponseList.add(productImageResponse);

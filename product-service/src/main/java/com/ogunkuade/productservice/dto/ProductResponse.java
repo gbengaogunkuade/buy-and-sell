@@ -20,7 +20,6 @@ public class ProductResponse {
     private String category;
     private Boolean available;
     private Long sellerId;
-    private List<byte[]> imageList;
 
 
 }

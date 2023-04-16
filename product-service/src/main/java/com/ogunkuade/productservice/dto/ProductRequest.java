@@ -42,6 +42,5 @@ public class ProductRequest {
 
     private Long sellerId;
 
-    private List<byte[]> imageList;
-
 }
+

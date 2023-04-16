@@ -1,4 +1,4 @@
-package com.ogunkuade.images.dto;
+package com.ogunkuade.microservicesmanager.dto;
 
 
 import lombok.*;

@@ -21,7 +21,7 @@ public class BNSProductRequest {
     private String product_amount;
     private String product_category;
     private Long product_sellerId;
-    private List<byte[]> product_imageList;
+
 
 
 

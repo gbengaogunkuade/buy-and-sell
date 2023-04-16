@@ -2,8 +2,10 @@ package com.ogunkuade.microservicesmanager.service;
 
 
 import com.ogunkuade.microservicesmanager.dto.BNSProductRequest;
+import com.ogunkuade.microservicesmanager.dto.ProductImageResponse;
 import com.ogunkuade.microservicesmanager.dto.ProductRequest;
-import com.ogunkuade.microservicesmanager.feignclient.ImageClient;
+import com.ogunkuade.microservicesmanager.dto.ProductResponse;
+import com.ogunkuade.microservicesmanager.feignclient.ProductImageClient;
 import com.ogunkuade.microservicesmanager.feignclient.ProductClient;
 import com.ogunkuade.microservicesmanager.repository.UserRepository;
 import org.slf4j.Logger;
@@ -18,18 +20,18 @@ import java.util.List;
 
 
 @Service
-public class BNSService {
+public class BNSProductService {
 
-    Logger logger = LoggerFactory.getLogger(BNSService.class);
+    Logger logger = LoggerFactory.getLogger(BNSProductService.class);
 
     private UserRepository userRepository;
     private ProductClient productClient;
-    private ImageClient imageClient;
+    private ProductImageClient productImageClient;
 
-    public BNSService(UserRepository userRepository, ProductClient productClient, ImageClient imageClient) {
+    public BNSProductService(UserRepository userRepository, ProductClient productClient, ProductImageClient productImageClient) {
         this.userRepository = userRepository;
         this.productClient = productClient;
-        this.imageClient = imageClient;
+        this.productImageClient = productImageClient;
     }
 
 
@@ -44,23 +46,34 @@ public class BNSService {
 
 
     public String createBNS_Success(BNSProductRequest bnsProductRequest, MultipartFile[] my_photos) throws IOException {
-        //USER
-        //PRODUCT
-        List<byte[]> imageList = new ArrayList<>();
-        for(MultipartFile my_photo : my_photos){
-            imageList.add(my_photo.getBytes());
-        }
 
+        //USER
+
+        //PRODUCT
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName(bnsProductRequest.getProduct_name());
         productRequest.setDescription(bnsProductRequest.getProduct_description());
         productRequest.setAmount(bnsProductRequest.getProduct_amount());
         productRequest.setCategory(bnsProductRequest.getProduct_category());
         productRequest.setSellerId(bnsProductRequest.getProduct_sellerId());
-        productRequest.setImageList(imageList);
         logger.info(productRequest.toString());
-        productClient.createProduct(productRequest);
+        ProductResponse savedProductResponse = productClient.createProduct(productRequest);
         logger.info("DATA SENT TO PRODUCT");
+
+
+        //IMAGES
+        List<byte[]> imageList = new ArrayList<>();
+
+        for(MultipartFile my_photo : my_photos){
+            imageList.add(my_photo.getBytes());
+        }
+
+        logger.info(imageList.toString());
+
+        ProductImageResponse productImageResponses = productImageClient.imageUploading(imageList, savedProductResponse.getId());
+
+        logger.info("DATA SENT TO PRODUCT IMAGE");
+
         return "redirect:/products/create";
         //IMAGE
     }

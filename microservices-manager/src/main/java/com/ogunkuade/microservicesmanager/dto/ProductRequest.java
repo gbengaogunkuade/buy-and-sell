@@ -21,7 +21,6 @@ public class ProductRequest {
     private String amount;
     private String category;
     private Long sellerId;
-    private List<byte[]> imageList;
 
 
 }

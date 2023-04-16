@@ -32,7 +32,6 @@ public class ProductRestService {
         productNew.setCategory(productRequest.getCategory());
         productNew.setAvailable(true);
         productNew.setSellerId(productRequest.getSellerId());
-        productNew.setImageList(productRequest.getImageList());
         Product savedProduct = productRepository.save(productNew);
         ProductResponse productResponse = new ProductResponse();
         productResponse.setId(savedProduct.getId());
@@ -42,7 +41,6 @@ public class ProductRestService {
         productResponse.setCategory(savedProduct.getCategory());
         productResponse.setAvailable(savedProduct.getAvailable());
         productResponse.setSellerId(savedProduct.getSellerId());
-        productResponse.setImageList(savedProduct.getImageList());
         return productResponse;
     }
 
