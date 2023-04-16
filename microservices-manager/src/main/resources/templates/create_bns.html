@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/layer-icon.png}">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<div class="container" style="font-family: 'Dosis', sans-serif; font-size: 20px;">
+    <div style="width:600px;margin-left: auto;margin-right: auto;margin-top:24px;padding: 24px;">
+        <div class="card">
+            <div class="card-header">
+                <h1>Registration</h1>
+            </div>
+            <div class="card-block" style="padding: 24px;">
+
+                <form th:action="@{/products/create}" method="post" th:object="${bnsProductRequest}" enctype="multipart/form-data">
+
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="username">Username</label>
+                            <input id="username" name="username" class="form-control" th:field="*{username}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label class="control-label" for="product_name">Product Name</label>
+                            <input id="product_name" name="product_name" class="form-control" th:field="*{product_name}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label class="control-label" for="product_description">Product Descritption</label>
+                            <input id="product_description" name="product_description" class="form-control" th:field="*{product_description}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label class="control-label" for="product_amount">Product Amount</label>
+                            <input id="product_amount" name="product_amount" class="form-control" th:field="*{product_amount}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label class="control-label" for="product_category">Product Category</label>
+                            <input id="product_category" name="product_category" class="form-control" th:field="*{product_category}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label class="control-label" for="product_sellerId">Product Seller ID</label>
+                            <input id="product_sellerId" name="product_sellerId" class="form-control" th:field="*{product_sellerId}" required autofocus="autofocus" />
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="my_photo" class="form-label">Picture</label><br>
+                            <input type="file" class="form-control" id="my_photo" name="my_photos" accept="image/*" style="font-size: 22px" required multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Register</button>
+
+                            <span style="margin-left: 35px;">Already registered? <a th:href="@{/login}" class="btn btn-primary" style="color: white">Login here</a></span>
+                        </div>
+                        <br>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
