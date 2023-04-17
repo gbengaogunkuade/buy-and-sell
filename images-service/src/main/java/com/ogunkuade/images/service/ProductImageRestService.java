@@ -1,10 +1,12 @@
 package com.ogunkuade.images.service;
 
 
+import com.ogunkuade.images.dto.ImageRequestRecord;
 import com.ogunkuade.images.dto.ProductImageResponse;
 import com.ogunkuade.images.entity.ProductImage;
 import com.ogunkuade.images.repository.ProductImageRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,17 +43,48 @@ public class ProductImageRestService {
     }
 
 
+//    //POST MULTIPLE IMAGES
+//    public ProductImageResponse imageRestUpload(List<byte[]> imageList, Long id) throws IOException {
+//        if(productImageRepository.existsByProductId(id)){
+//            productImage = productImageRepository.findImageByProductId(id);
+//            productImage.setImageList(imageList);
+//            savedProductImage = productImageRepository.save(productImage);
+//            productImageResponse = new ProductImageResponse();
+//            productImageResponse.setId(savedProductImage.getId());
+//            productImageResponse.setProductId(savedProductImage.getProductId());
+//            productImageResponse.setImageList(savedProductImage.getImageList());
+//            return productImageResponse;
+//        } else{
+//            //SAVING IMAGES TO DATABASE
+//            productImage = new ProductImage();
+//            productImage.setProductId(id);
+//            productImage.setImageList(imageList);
+//            savedProductImage = productImageRepository.save(productImage);
+//            productImageResponse = new ProductImageResponse();
+//            productImageResponse.setId(savedProductImage.getId());
+//            productImageResponse.setProductId(savedProductImage.getProductId());
+//            productImageResponse.setImageList(savedProductImage.getImageList());
+//            return productImageResponse;
+//        }
+//    }
+
+
+
+
     //POST MULTIPLE IMAGES
-    public ProductImageResponse imageRestUpload(List<byte[]> imageList, Long id) throws IOException {
+    public ProductImageResponse imageRestUpload(@RequestBody ImageRequestRecord imageRequestRecord, Long id) throws IOException {
         //SAVING IMAGES TO DATABASE
         productImage = new ProductImage();
+        productImage.setName(imageRequestRecord.name());
+        productImage.setImage(imageRequestRecord.image());
         productImage.setProductId(id);
-        productImage.setImageList(imageList);
         savedProductImage = productImageRepository.save(productImage);
+
         productImageResponse = new ProductImageResponse();
         productImageResponse.setId(savedProductImage.getId());
+        productImageResponse.setName(savedProductImage.getName());
+        productImageResponse.setImage(savedProductImage.getImage());
         productImageResponse.setProductId(savedProductImage.getProductId());
-        productImageResponse.setImageList(savedProductImage.getImageList());
         return productImageResponse;
     }
 
@@ -60,26 +93,31 @@ public class ProductImageRestService {
     //GET SINGLE IMAGE
     public ProductImageResponse getRestImage(Long id) throws IOException {
         //RETRIEVING IMAGE FROM DATABASE
-        productImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
-        productImage = productImageRepository.findById(id).get();
+        productImage = productImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
         productImageResponse = new ProductImageResponse();
-        productImageResponse.setId(productImage.getId());
-        productImageResponse.setProductId(productImage.getProductId());
-        productImageResponse.setImageList(productImage.getImageList());
+        productImageResponse.setId(savedProductImage.getId());
+        productImageResponse.setName(savedProductImage.getName());
+        productImageResponse.setImage(savedProductImage.getImage());
+        productImageResponse.setProductId(savedProductImage.getProductId());
         return productImageResponse;
     }
 
 
 
-    //GET IMAGE BY PRODUCT ID
-    public ProductImageResponse getRestImageByProductId(Long id) throws IOException {
+    //GET IMAGES BY PRODUCT ID
+    public List<ProductImageResponse> getRestImageByProductId(Long id) throws IOException {
         if(productImageRepository.existsByProductId(id)){
-            productImage = productImageRepository.findImageByProductId(id); //
-            productImageResponse = new ProductImageResponse();
-            productImageResponse.setId(productImage.getId());
-            productImageResponse.setProductId(productImage.getProductId());
-            productImageResponse.setImageList(productImage.getImageList());
-            return productImageResponse;
+            productImageResponseList = new ArrayList<>();
+            productImageList = productImageRepository.findImagesByProductId(id);
+            for(ProductImage productImage : productImageList){
+                productImageResponse = new ProductImageResponse();
+                productImageResponse.setId(productImage.getId());
+                productImageResponse.setName(productImage.getName());
+                productImageResponse.setImage(productImage.getImage());
+                productImageResponse.setProductId(productImage.getProductId());
+                productImageResponseList.add(productImageResponse);
+            }
+            return productImageResponseList;
         } else{
             throw new FileNotFoundException("Image With The Product Id Not Found");
         }
@@ -94,8 +132,9 @@ public class ProductImageRestService {
         for(ProductImage productImage : productImageList){
             productImageResponse = new ProductImageResponse();
             productImageResponse.setId(productImage.getId());
+            productImageResponse.setName(productImage.getName());
+            productImageResponse.setImage(productImage.getImage());
             productImageResponse.setProductId(productImage.getProductId());
-            productImageResponse.setImageList(productImage.getImageList());
             productImageResponseList.add(productImageResponse);
         }
         return productImageResponseList;

@@ -12,8 +12,8 @@ import lombok.*;
 public class UserImageResponse {
 
     private Long id;
-    private Long userId;
+    private String name;
     private byte[] image;
-
+    private Long userId;
 
 }

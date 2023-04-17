@@ -1,6 +1,7 @@
 package com.ogunkuade.images.controller;
 
 
+import com.ogunkuade.images.dto.ImageRequestRecord;
 import com.ogunkuade.images.dto.ProductImageResponse;
 import com.ogunkuade.images.service.ProductImageRestService;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class ProductImageRestController {
 
     //POST MULTIPLE IMAGES
     @PostMapping("/product-image/{id}/upload")
-    public ProductImageResponse imageRestUploading(@RequestBody List<byte[]> imageList, @PathVariable Long id) throws IOException {
-        return productImageRestService.imageRestUpload(imageList, id);
+    public ProductImageResponse imageRestUploading(@RequestBody ImageRequestRecord imageRequestRecord, @PathVariable Long id) throws IOException {
+        return productImageRestService.imageRestUpload(imageRequestRecord, id);
     }
 
 
@@ -37,7 +38,7 @@ public class ProductImageRestController {
 
     //GET IMAGE BY PRODUCT ID
     @GetMapping("/product-image/productId/{id}")
-    public ProductImageResponse gettingRestImageByProductId(@PathVariable Long id) throws IOException {
+    public List<ProductImageResponse> gettingRestImageByProductId(@PathVariable Long id) throws IOException {
         return productImageRestService.getRestImageByProductId(id);
     }
 

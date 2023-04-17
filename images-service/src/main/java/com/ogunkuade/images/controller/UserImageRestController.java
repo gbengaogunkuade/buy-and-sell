@@ -1,6 +1,7 @@
 package com.ogunkuade.images.controller;
 
 
+import com.ogunkuade.images.dto.ImageRequestRecord;
 import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.service.UserImageRestService;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class UserImageRestController {
     //POST SINGLE IMAGE
     @PostMapping("/user-image/{id}/upload")
     @ResponseStatus(HttpStatus.OK)
-    public UserImageResponse imageRestUploading(@RequestBody byte[] image, @PathVariable Long id) throws IOException {
-        return userImageRestService.imageRestUpload(image, id);
+    public UserImageResponse imageRestUploading(@RequestBody ImageRequestRecord imageRequestRecord, @PathVariable Long id) throws IOException {
+        return userImageRestService.imageRestUpload(imageRequestRecord, id);
     }
 
 

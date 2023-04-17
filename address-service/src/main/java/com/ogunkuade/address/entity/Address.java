@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 
 @Entity
-@Table(name="address")
+@Table(name="addresses")
 public class Address {
 
     @Id

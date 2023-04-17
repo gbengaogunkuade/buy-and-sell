@@ -14,8 +14,9 @@ import java.util.List;
 public class ProductImageResponse {
 
     private Long id;
+    private String name;
+    private byte[] image;
     private Long productId;
-    private List<byte[]> imageList;
 
 
 

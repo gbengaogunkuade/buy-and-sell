@@ -19,9 +19,10 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productId;
+    private String name;
     @Lob
-    private List<byte[]> imageList;
+    private byte[] image;
+    private Long productId;
 
 
 
