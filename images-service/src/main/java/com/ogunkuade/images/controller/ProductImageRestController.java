@@ -2,10 +2,8 @@ package com.ogunkuade.images.controller;
 
 
 import com.ogunkuade.images.dto.ProductImageResponse;
-import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.service.ProductImageRestService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,10 +27,18 @@ public class ProductImageRestController {
     }
 
 
+
     //GET SINGLE IMAGE
     @GetMapping("/product-image/{id}")
     public ProductImageResponse gettingRestImage(@PathVariable Long id) throws IOException {
         return productImageRestService.getRestImage(id);
+    }
+
+
+    //GET IMAGE BY PRODUCT ID
+    @GetMapping("/product-image/productId/{id}")
+    public ProductImageResponse gettingRestImageByProductId(@PathVariable Long id) throws IOException {
+        return productImageRestService.getRestImageByProductId(id);
     }
 
 
@@ -41,6 +47,7 @@ public class ProductImageRestController {
     public List<ProductImageResponse> gettingAllRestImage() {
         return productImageRestService.getAllRestImage();
     }
+
 
 
 

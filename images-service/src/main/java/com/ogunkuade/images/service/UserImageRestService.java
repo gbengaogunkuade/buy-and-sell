@@ -5,13 +5,9 @@ import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.entity.UserImage;
 import com.ogunkuade.images.repository.UserImageRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +48,12 @@ public class UserImageRestService {
         //SAVING IMAGES TO DATABASE
         userImage = new UserImage();
         userImage.setUserId(id);
+        userImage.setImage(image);
         UserImage savedImage = userImageRepository.save(userImage);
-
         userImageResponse = new UserImageResponse();
         userImageResponse.setId(savedImage.getId());
         userImageResponse.setUserId(savedImage.getUserId());
         userImageResponse.setImage(savedImage.getImage());
-
         return userImageResponse;
     }
 
@@ -67,19 +62,29 @@ public class UserImageRestService {
 
     //GET SINGLE IMAGE
     public UserImageResponse getRestImage(Long id) throws IOException {
-        //RETRIEVING IMAGE FROM DATABASE
-        if(userImageRepository.existsById(id)){
-            savedUserImage = userImageRepository.findById(id).get();
-            userImageResponse = new UserImageResponse();
-            userImageResponse.setId(savedUserImage.getId());
-            userImageResponse.setUserId(savedUserImage.getUserId());
-            userImageResponse.setImage(savedUserImage.getImage());
-            return userImageResponse;
-        } else{
-            throw new FileNotFoundException("Image not found");
-        }
+        userImage = userImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image not found"));
+        userImageResponse = new UserImageResponse();
+        userImageResponse.setId(userImage.getId());
+        userImageResponse.setUserId(userImage.getUserId());
+        userImageResponse.setImage(userImage.getImage());
+        return userImageResponse;
     }
 
+
+
+
+    public UserImageResponse getRestImageByUserId(Long id) throws IOException {
+        if(userImageRepository.existsByUserId(id)){
+            userImage = userImageRepository.findImageByUserId(id);
+            userImageResponse = new UserImageResponse();
+            userImageResponse.setId(userImage.getId());
+            userImageResponse.setUserId(userImage.getUserId());
+            userImageResponse.setImage(userImage.getImage());
+            return userImageResponse;
+        } else{
+            throw new FileNotFoundException("Image with this userId not found");
+        }
+    }
 
 
 
@@ -98,6 +103,12 @@ public class UserImageRestService {
     }
 
 
+
+    //GET SAMPLE IMAGE FOR TESTING
+    public byte[] getSampleImage(Long id) throws FileNotFoundException {
+        userImage = userImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
+        return userImage.getImage();
+    }
 
 
 

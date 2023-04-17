@@ -2,17 +2,12 @@ package com.ogunkuade.images.service;
 
 
 import com.ogunkuade.images.dto.ProductImageResponse;
-import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.entity.ProductImage;
-import com.ogunkuade.images.entity.UserImage;
 import com.ogunkuade.images.repository.ProductImageRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,33 +48,42 @@ public class ProductImageRestService {
         productImage.setProductId(id);
         productImage.setImageList(imageList);
         savedProductImage = productImageRepository.save(productImage);
-
         productImageResponse = new ProductImageResponse();
         productImageResponse.setId(savedProductImage.getId());
         productImageResponse.setProductId(savedProductImage.getProductId());
         productImageResponse.setImageList(savedProductImage.getImageList());
-
         return productImageResponse;
     }
-
 
 
 
     //GET SINGLE IMAGE
     public ProductImageResponse getRestImage(Long id) throws IOException {
         //RETRIEVING IMAGE FROM DATABASE
-        if(productImageRepository.existsById(id)){
-            productImage = productImageRepository.findById(id).get();
+        productImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
+        productImage = productImageRepository.findById(id).get();
+        productImageResponse = new ProductImageResponse();
+        productImageResponse.setId(productImage.getId());
+        productImageResponse.setProductId(productImage.getProductId());
+        productImageResponse.setImageList(productImage.getImageList());
+        return productImageResponse;
+    }
+
+
+
+    //GET IMAGE BY PRODUCT ID
+    public ProductImageResponse getRestImageByProductId(Long id) throws IOException {
+        if(productImageRepository.existsByProductId(id)){
+            productImage = productImageRepository.findImageByProductId(id); //
             productImageResponse = new ProductImageResponse();
             productImageResponse.setId(productImage.getId());
             productImageResponse.setProductId(productImage.getProductId());
             productImageResponse.setImageList(productImage.getImageList());
             return productImageResponse;
         } else{
-            throw new FileNotFoundException("Image not found");
+            throw new FileNotFoundException("Image With The Product Id Not Found");
         }
     }
-
 
 
 
@@ -96,10 +100,6 @@ public class ProductImageRestService {
         }
         return productImageResponseList;
     }
-
-
-
-
 
 
 
