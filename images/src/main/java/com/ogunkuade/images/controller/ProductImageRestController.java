@@ -24,8 +24,8 @@ public class ProductImageRestController {
 
     //POST MULTIPLE IMAGES
     @PostMapping("/product-image/{id}/upload")
-    public ProductImageResponse imageUploading(@RequestBody List<byte[]> imageList, @PathVariable Long id) throws IOException {
-        return productImageRestService.imageUploadRest(imageList, id);
+    public ProductImageResponse imageRestUploading(@RequestBody List<byte[]> imageList, @PathVariable Long id) throws IOException {
+        return productImageRestService.imageRestUpload(imageList, id);
     }
 
 

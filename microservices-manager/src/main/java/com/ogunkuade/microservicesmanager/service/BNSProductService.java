@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,6 +35,15 @@ public class BNSProductService {
         this.productImageClient = productImageClient;
     }
 
+
+
+    public String getBNSProductPage(Model model){
+        return "index";
+    }
+
+    public String getBNSProductCart(Model model){
+        return "cart";
+    }
 
 
 
@@ -70,7 +80,7 @@ public class BNSProductService {
 
         logger.info(imageList.toString());
 
-        ProductImageResponse productImageResponses = productImageClient.imageUploading(imageList, savedProductResponse.getId());
+        ProductImageResponse productImageResponses = productImageClient.imageRestUploading(imageList, savedProductResponse.getId());
 
         logger.info("DATA SENT TO PRODUCT IMAGE");
 

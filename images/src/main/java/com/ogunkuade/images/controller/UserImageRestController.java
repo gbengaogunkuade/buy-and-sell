@@ -22,8 +22,8 @@ public class UserImageRestController {
 
     //POST SINGLE IMAGE
     @PostMapping("/user-image/{id}/upload")
-    public UserImageResponse imageUploadComplete(@PathVariable Long id, @RequestParam MultipartFile my_photo) throws IOException {
-        return userImageRestService.imageUploadRestComplete(id, my_photo);
+    public UserImageResponse imageRestUploading(@RequestBody byte[] image, @PathVariable Long id) throws IOException {
+        return userImageRestService.imageRestUpload(image, id);
     }
 
 

@@ -23,6 +23,18 @@ public class BNSProductController {
     }
 
 
+    @GetMapping("/products")
+    public String gettingBNSProductPage(Model model){
+        return bNSProductService.getBNSProductPage(model);
+    }
+
+    @GetMapping("/products/cart")
+    public String gettingBNSProductCart(Model model){
+        return bNSProductService.getBNSProductCart(model);
+    }
+
+
+
     @GetMapping("/products/create")
     public String creatingBNS(Model model){
         return bNSProductService.createBNS(model);

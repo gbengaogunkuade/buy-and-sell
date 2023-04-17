@@ -5,6 +5,8 @@ import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.entity.UserImage;
 import com.ogunkuade.images.repository.UserImageRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,39 +48,16 @@ public class UserImageRestService {
 
 
     //POST SINGLE IMAGES
-    public UserImageResponse imageUploadRestComplete(Long id, MultipartFile my_photo) throws IOException {
+    public UserImageResponse imageRestUpload(byte[] image, Long id) throws IOException {
         //SAVING IMAGES TO DATABASE
         userImage = new UserImage();
-        userImage.setName(my_photo.getOriginalFilename());
-        userImage.setType(my_photo.getContentType());
         userImage.setUserId(id);
-        userImage.setImage(my_photo.getBytes());
         UserImage savedImage = userImageRepository.save(userImage);
 
         userImageResponse = new UserImageResponse();
         userImageResponse.setId(savedImage.getId());
-        userImageResponse.setName(savedImage.getName());
-        userImageResponse.setType(savedImage.getType());
         userImageResponse.setUserId(savedImage.getUserId());
         userImageResponse.setImage(savedImage.getImage());
-
-        //SAVING IMAGE TO LOCAL DISK
-        imageIDStr = id.toString();
-        //DEFINE AND CREATE UPLOAD_PATH
-        UPLOAD_PATH = Path.of(IMAGE_PATH + File.separator + imageIDStr);
-        if(Files.notExists(UPLOAD_PATH)){
-            Files.createDirectory(UPLOAD_PATH);
-        }
-        //DEFINE AND CREATE A LOCAL IMAGE
-        localImage = Path.of(UPLOAD_PATH + File.separator + my_photo.getOriginalFilename());
-        if(Files.exists(localImage)){
-            createLocalImage = Files.write(localImage, my_photo.getBytes());
-            nameOfCreatedLocalImage = createLocalImage.getFileName().toString();
-        } else{
-            Path emptyLocalImage = Files.createFile(localImage);
-            createLocalImage = Files.write(emptyLocalImage, my_photo.getBytes());
-            nameOfCreatedLocalImage = createLocalImage.getFileName().toString();
-        }
 
         return userImageResponse;
     }
@@ -93,8 +72,6 @@ public class UserImageRestService {
             savedUserImage = userImageRepository.findById(id).get();
             userImageResponse = new UserImageResponse();
             userImageResponse.setId(savedUserImage.getId());
-            userImageResponse.setName(savedUserImage.getName());
-            userImageResponse.setType(savedUserImage.getType());
             userImageResponse.setUserId(savedUserImage.getUserId());
             userImageResponse.setImage(savedUserImage.getImage());
             return userImageResponse;
@@ -113,8 +90,6 @@ public class UserImageRestService {
         for(UserImage userImage : userImageList){
             userImageResponse = new UserImageResponse();
             userImageResponse.setId(userImage.getId());
-            userImageResponse.setName(userImage.getName());
-            userImageResponse.setType(userImage.getType());
             userImageResponse.setUserId(userImage.getUserId());
             userImageResponse.setImage(userImage.getImage());
             userImageResponseList.add(userImageResponse);

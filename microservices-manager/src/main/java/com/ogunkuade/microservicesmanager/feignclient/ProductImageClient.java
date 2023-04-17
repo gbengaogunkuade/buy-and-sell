@@ -18,7 +18,7 @@ public interface ProductImageClient {
 
     //POST MULTIPLE IMAGES
     @PostMapping("/product-image/{id}/upload")
-    ProductImageResponse imageUploading(@RequestBody List<byte[]> imageList, @PathVariable Long id) throws IOException;
+    ProductImageResponse imageRestUploading(@RequestBody List<byte[]> imageList, @PathVariable Long id) throws IOException;
 
 
 

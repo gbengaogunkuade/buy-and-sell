@@ -47,12 +47,7 @@ public class ProductImageRestService {
 
 
     //POST MULTIPLE IMAGES
-    public ProductImageResponse imageUploadRest(List<byte[]> imageList, Long id) throws IOException {
-//        List<byte[]> imageList = new ArrayList<>();
-
-//        for(MultipartFile my_photo : my_photos){
-//            imageList.add(my_photo.getBytes());
-//        }
+    public ProductImageResponse imageRestUpload(List<byte[]> imageList, Long id) throws IOException {
         //SAVING IMAGES TO DATABASE
         productImage = new ProductImage();
         productImage.setProductId(id);
@@ -74,11 +69,11 @@ public class ProductImageRestService {
     public ProductImageResponse getRestImage(Long id) throws IOException {
         //RETRIEVING IMAGE FROM DATABASE
         if(productImageRepository.existsById(id)){
-            savedProductImage = productImageRepository.findById(id).get();
+            productImage = productImageRepository.findById(id).get();
             productImageResponse = new ProductImageResponse();
-            productImageResponse.setId(savedProductImage.getId());
-            productImageResponse.setProductId(savedProductImage.getProductId());
-            productImageResponse.setImageList(savedProductImage.getImageList());
+            productImageResponse.setId(productImage.getId());
+            productImageResponse.setProductId(productImage.getProductId());
+            productImageResponse.setImageList(productImage.getImageList());
             return productImageResponse;
         } else{
             throw new FileNotFoundException("Image not found");
