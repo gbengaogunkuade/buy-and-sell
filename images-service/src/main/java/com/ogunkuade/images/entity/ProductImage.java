@@ -25,6 +25,4 @@ public class ProductImage {
     private Long productId;
 
 
-
-
 }
