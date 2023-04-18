@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 
 # EXCLUDE THE CERTS PATH FROM GETTING TO GITHUB
-!**/src/main/resources/certs/private.pem
+!**/src/main/resources/certs/**
 
 
 ### STS ###
