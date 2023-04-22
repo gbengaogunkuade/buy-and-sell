@@ -43,37 +43,9 @@ public class ProductImageRestService {
     }
 
 
-//    //POST MULTIPLE IMAGES
-//    public ProductImageResponse imageRestUpload(List<byte[]> imageList, Long id) throws IOException {
-//        if(productImageRepository.existsByProductId(id)){
-//            productImage = productImageRepository.findImageByProductId(id);
-//            productImage.setImageList(imageList);
-//            savedProductImage = productImageRepository.save(productImage);
-//            productImageResponse = new ProductImageResponse();
-//            productImageResponse.setId(savedProductImage.getId());
-//            productImageResponse.setProductId(savedProductImage.getProductId());
-//            productImageResponse.setImageList(savedProductImage.getImageList());
-//            return productImageResponse;
-//        } else{
-//            //SAVING IMAGES TO DATABASE
-//            productImage = new ProductImage();
-//            productImage.setProductId(id);
-//            productImage.setImageList(imageList);
-//            savedProductImage = productImageRepository.save(productImage);
-//            productImageResponse = new ProductImageResponse();
-//            productImageResponse.setId(savedProductImage.getId());
-//            productImageResponse.setProductId(savedProductImage.getProductId());
-//            productImageResponse.setImageList(savedProductImage.getImageList());
-//            return productImageResponse;
-//        }
-//    }
 
-
-
-
-    //POST MULTIPLE IMAGES
-    public ProductImageResponse imageRestUpload(@RequestBody ImageRequestRecord imageRequestRecord, Long id) throws IOException {
-        //SAVING IMAGES TO DATABASE
+    //POST SINGLE IMAGE
+    public ProductImageResponse imageRestUpload(ImageRequestRecord imageRequestRecord, Long id) throws IOException {
         productImage = new ProductImage();
         productImage.setName(imageRequestRecord.name());
         productImage.setImage(imageRequestRecord.image());
@@ -92,7 +64,6 @@ public class ProductImageRestService {
 
     //GET SINGLE IMAGE
     public ProductImageResponse getRestImage(Long id) throws IOException {
-        //RETRIEVING IMAGE FROM DATABASE
         productImage = productImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
         productImageResponse = new ProductImageResponse();
         productImageResponse.setId(savedProductImage.getId());

@@ -53,7 +53,7 @@ public class UserImageRestService {
     //POST SINGLE IMAGES
     public UserImageResponse imageRestUpload(@RequestBody ImageRequestRecord imageRequestRecord, Long id) throws IOException {
         if(userImageRepository.existsByUserId(id)){
-            logger.warn("IMAGE FOR THIS USER ALREADY EXIST");
+            logger.warn("IMAGE FOR THIS USER ALREADY EXIST, OVERWRITING PREVIOUS IMAGE");
             userImage = userImageRepository.findImageByUserId(id);
             userImage.setName(imageRequestRecord.name());
             userImage.setImage(imageRequestRecord.image());

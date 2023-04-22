@@ -45,8 +45,6 @@ public class AddressService {
 
 
 
-
-
     //  GET ADDRESS BY ID
     public AddressResponse getAddressById(Long id) {
         Address address = addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException(String.format("an address with the id %d does not exist", id)));
@@ -63,23 +61,21 @@ public class AddressService {
 
 
 
+
     //  GET ALL ADDRESSES
     public List<AddressResponse> getAllAddresses(){
-        List<Address> addresses = addressRepository.findAll();
-        List<AddressResponse> addressesFound = new ArrayList<>();
-
-        for(Address address : addresses){
-            addressesFound.add(
-                    new AddressResponse(
-                            address.getId(),
-                            address.getLane1(),
-                            address.getLane2(),
-                            address.getZip(),
-                            address.getState()
-                    )
-            );
+        List<AddressResponse> addressResponseList = new ArrayList<>();
+        List<Address> addressList = addressRepository.findAll();
+        for(Address address : addressList){
+            AddressResponse addressResponse = new AddressResponse();
+            addressResponse.setId(address.getId());
+            addressResponse.setLane1(address.getLane1());
+            addressResponse.setLane2(address.getLane2());
+            addressResponse.setZip(address.getZip());
+            addressResponse.setState(address.getState());
+            addressResponseList.add(addressResponse);
         }
-        return addressesFound;
+        return addressResponseList;
     }
 
 
@@ -94,7 +90,7 @@ public class AddressService {
         addressToBeUpdated.setZip(address.getZip());
         addressToBeUpdated.setState(address.getState());
         Address updatedAddress = addressRepository.save(addressToBeUpdated);
-        //                                                                  /
+
         AddressResponse addressResponseNew = new AddressResponse();
         addressResponseNew.setId(updatedAddress.getId());
         addressResponseNew.setLane1(updatedAddress.getLane1());

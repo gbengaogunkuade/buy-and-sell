@@ -6,7 +6,6 @@ import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.service.UserImageRestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;

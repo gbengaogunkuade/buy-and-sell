@@ -14,14 +14,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProductImageRestController {
 
-    private ProductImageRestService productImageRestService;
+    private final ProductImageRestService productImageRestService;
 
     public ProductImageRestController(ProductImageRestService productImageRestService) {
         this.productImageRestService = productImageRestService;
     }
 
 
-    //POST MULTIPLE IMAGES
+    //POST SINGLE IMAGE
     @PostMapping("/product-image/{id}/upload")
     public ProductImageResponse imageRestUploading(@RequestBody ImageRequestRecord imageRequestRecord, @PathVariable Long id) throws IOException {
         return productImageRestService.imageRestUpload(imageRequestRecord, id);
