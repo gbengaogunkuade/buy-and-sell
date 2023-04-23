@@ -153,7 +153,7 @@ public class ProductRestService {
 
     //GET PRODUCTS BY SELLER ID
     public List<ProductResponse> getProductsBySellerId(Long id) throws FileNotFoundException {
-        List<ProductResponse> productResponseList = new ArrayList<>();
+        productResponseList = new ArrayList<>();
         if(productRepository.existsProductBySellerId(id)){
             productList = productRepository.findProductsBySellerId(id);
             return getListOfProductResponseFromListOfProduct();
@@ -207,9 +207,6 @@ public class ProductRestService {
         productRepository.delete(product);
         return String.format("PRODUCT WITH THE ID %d SUCCESSFULLY DELETED", id);
     }
-
-
-
 
 
 
