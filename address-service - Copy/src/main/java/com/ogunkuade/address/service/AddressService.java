@@ -6,12 +6,10 @@ import com.ogunkuade.address.entity.Address;
 import com.ogunkuade.address.exception.AddressNotFoundException;
 import com.ogunkuade.address.repository.AddressRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -81,28 +79,6 @@ public class AddressService {
         return addressResponseList;
     }
 
-
-//
-
-
-    //  GET ALL ADDRESSES WITH PAGINATION
-    public List<AddressResponse> getAllAddressesWithPagination(int pageNumber, int pageSize){
-        List<AddressResponse> addressResponseList = new ArrayList<>();
-
-        Page<Address> addressListWithPagination = addressRepository.findAll(PageRequest.of(pageNumber, pageSize));
-        List<Address> addressList = addressListWithPagination.stream().toList();
-
-        for(Address address : addressList){
-            AddressResponse addressResponse = new AddressResponse();
-            addressResponse.setId(address.getId());
-            addressResponse.setLane1(address.getLane1());
-            addressResponse.setLane2(address.getLane2());
-            addressResponse.setZip(address.getZip());
-            addressResponse.setState(address.getState());
-            addressResponseList.add(addressResponse);
-        }
-        return addressResponseList;
-    }
 
 
 

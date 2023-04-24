@@ -2,6 +2,9 @@ package com.ogunkuade.microservicesmanager.controller;
 
 
 
+import com.ogunkuade.microservicesmanager.dto.UserRequestDto;
+import com.ogunkuade.microservicesmanager.dto.UserResponseDto;
+import com.ogunkuade.microservicesmanager.dto.UserUpdateRequestDto;
 import com.ogunkuade.microservicesmanager.entity.User;
 import com.ogunkuade.microservicesmanager.exception.UnmatchedPasswordException;
 import com.ogunkuade.microservicesmanager.exception.UserAlreadyExistsException;
@@ -28,7 +31,7 @@ public class UserRestController {
 
     //CHECK FOR USER BY ID
     @GetMapping("/{id}/checkId")
-    public Boolean checkForId(Long id){
+    public Boolean checkForId(@PathVariable Long id){
         return userRestService.checkForId(id);
     }
 
@@ -40,44 +43,56 @@ public class UserRestController {
     };
 
 
-    //GET USER BY USERNAME
-    @GetMapping("/{username}")
+
+    //CREATE USER
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public User gettingUser(@PathVariable String username) throws UserNotFoundException {
-        return userRestService.getUser(username);
+    public UserResponseDto creatingUser(@RequestBody UserRequestDto userRequestDto) throws UserAlreadyExistsException, UnmatchedPasswordException {
+        return userRestService.createUser(userRequestDto);
+    }
+
+
+
+    //UPDATE USER BY ID
+    @PutMapping("/{id}/update")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDto updatingUserById(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto, @PathVariable Long id) throws UserNotFoundException{
+        return userRestService.updateUserById(userUpdateRequestDto, id);
+    }
+
+
+
+    //GET USER BY ID
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDto gettingUserById(@PathVariable Long id) throws UserNotFoundException {
+        return userRestService.getUserById(id);
     }
 
 
     //GET ALL USERS
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<User> gettingAllUsers(){
+    public List<UserResponseDto> gettingAllUsers(){
         return userRestService.getAllUsers();
     }
 
 
-    //CREATE USER
-    @PostMapping("/register")
+    //GET ALL USERS WITH PAGINATION
+    @GetMapping("/all/page")
     @ResponseStatus(HttpStatus.OK)
-    public User creatingUser(@Valid @RequestBody User User) throws UserAlreadyExistsException, UnmatchedPasswordException {
-        return userRestService.createUser(User);
+    public List<UserResponseDto> gettingAllUsersWithPagination(@RequestParam int pageNumber, @RequestParam int pageSize){
+        return userRestService.getAllUsersWithPagination(pageNumber, pageSize);
     }
 
 
 
-    //UPDATE USER BY USERNAME
-    @PutMapping("/{username}/update")
-    @ResponseStatus(HttpStatus.OK)
-    public User updatingUser(@Valid @RequestBody User User, @PathVariable String username) throws UserNotFoundException{
-        return userRestService.updateUser(User, username);
-    }
 
-
-    //DELETE USER BY USERNAME
+    //DELETE USER BY ID
     @DeleteMapping("/{username}/delete")
     @ResponseStatus(HttpStatus.OK)
-    public String deletingUser(@PathVariable String username) throws UserNotFoundException {
-        return userRestService.deleteUser(username);
+    public String deletingUserById(@PathVariable Long id) throws UserNotFoundException {
+        return userRestService.deleteUserById(id);
     }
 
 

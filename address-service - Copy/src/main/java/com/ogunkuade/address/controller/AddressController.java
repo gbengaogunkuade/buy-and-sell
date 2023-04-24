@@ -62,15 +62,6 @@ public class AddressController {
 
 
 
-    //GETTING ALL ADDRESSES WITH PAGINATION
-    @GetMapping("/all/page")
-    @ResponseStatus(HttpStatus.OK)
-    public List<AddressResponse> gettingAllAddressesWithPagination(@RequestParam int pageNumber, @RequestParam int pageSize){
-        return addressService.getAllAddressesWithPagination(pageNumber, pageSize);
-    }
-
-
-
     //UPDATING ADDRESS BY ID
     @PutMapping("/{id}/update")
     @ResponseStatus(HttpStatus.OK)
