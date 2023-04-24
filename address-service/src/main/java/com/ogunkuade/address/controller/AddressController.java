@@ -1,6 +1,7 @@
 package com.ogunkuade.address.controller;
 
 
+import com.ogunkuade.address.dto.AddressRequest;
 import com.ogunkuade.address.dto.AddressResponse;
 import com.ogunkuade.address.entity.Address;
 import com.ogunkuade.address.exception.AddressNotFoundException;
@@ -37,8 +38,16 @@ public class AddressController {
     //SAVING ADDRESS
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
-    public AddressResponse savingAddress(@Valid @RequestBody Address address){
-        return addressService.saveAddress(address);
+    public AddressResponse savingAddress(@Valid @RequestBody AddressRequest addressRequest){
+        return addressService.saveAddress(addressRequest);
+    }
+
+
+    //UPDATING ADDRESS BY ID
+    @PutMapping("/{id}/update")
+    @ResponseStatus(HttpStatus.OK)
+    public AddressResponse updatingAddressById(@Valid @RequestBody AddressRequest addressRequest, @PathVariable Long id) throws AddressNotFoundException {
+        return addressService.updateAddressById(addressRequest, id);
     }
 
 
@@ -70,13 +79,6 @@ public class AddressController {
     }
 
 
-
-    //UPDATING ADDRESS BY ID
-    @PutMapping("/{id}/update")
-    @ResponseStatus(HttpStatus.OK)
-    public AddressResponse updatingAddressById(@Valid @RequestBody Address address, @PathVariable Long id) throws AddressNotFoundException {
-        return addressService.updateAddressById(address, id);
-    }
 
 
     //DELETING ADDRESS BY ID

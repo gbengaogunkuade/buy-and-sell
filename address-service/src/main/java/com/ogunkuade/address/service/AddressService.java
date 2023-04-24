@@ -1,6 +1,7 @@
 package com.ogunkuade.address.service;
 
 
+import com.ogunkuade.address.dto.AddressRequest;
 import com.ogunkuade.address.dto.AddressResponse;
 import com.ogunkuade.address.entity.Address;
 import com.ogunkuade.address.exception.AddressNotFoundException;
@@ -34,7 +35,12 @@ public class AddressService {
 
 
     //  SAVE ADDRESS
-    public AddressResponse saveAddress(Address address){
+    public AddressResponse saveAddress(AddressRequest addressRequest){
+        Address address = new Address();
+        address.setLane1(addressRequest.getLane1());
+        address.setLane2(addressRequest.getLane2());
+        address.setZip(addressRequest.getZip());
+        address.setState(addressRequest.getState());
         Address savedAddress = addressRepository.save(address);
         AddressResponse addressResponse = new AddressResponse(
                 savedAddress.getId(),
@@ -46,6 +52,25 @@ public class AddressService {
         return addressResponse;
     }
 
+
+
+    //  UPDATE ADDRESS BY ID
+    public AddressResponse updateAddressById(AddressRequest addressRequest, Long id) throws AddressNotFoundException {
+        Address addressToBeUpdated = addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException(String.format("an address with the id %d does not exist", id)));
+        addressToBeUpdated.setLane1(addressRequest.getLane1());
+        addressToBeUpdated.setLane2(addressRequest.getLane2());
+        addressToBeUpdated.setZip(addressRequest.getZip());
+        addressToBeUpdated.setState(addressRequest.getState());
+        Address updatedAddress = addressRepository.save(addressToBeUpdated);
+
+        AddressResponse addressResponseNew = new AddressResponse();
+        addressResponseNew.setId(updatedAddress.getId());
+        addressResponseNew.setLane1(updatedAddress.getLane1());
+        addressResponseNew.setLane2(updatedAddress.getLane2());
+        addressResponseNew.setZip(updatedAddress.getZip());
+        addressResponseNew.setState(updatedAddress.getState());
+        return addressResponseNew;
+    }
 
 
     //  GET ADDRESS BY ID
@@ -102,27 +127,6 @@ public class AddressService {
             addressResponseList.add(addressResponse);
         }
         return addressResponseList;
-    }
-
-
-
-
-    //  UPDATE ADDRESS BY ID
-    public AddressResponse updateAddressById(Address address, Long id) throws AddressNotFoundException {
-        Address addressToBeUpdated = addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException(String.format("an address with the id %d does not exist", id)));
-        addressToBeUpdated.setLane1(address.getLane1());
-        addressToBeUpdated.setLane2(address.getLane2());
-        addressToBeUpdated.setZip(address.getZip());
-        addressToBeUpdated.setState(address.getState());
-        Address updatedAddress = addressRepository.save(addressToBeUpdated);
-
-        AddressResponse addressResponseNew = new AddressResponse();
-        addressResponseNew.setId(updatedAddress.getId());
-        addressResponseNew.setLane1(updatedAddress.getLane1());
-        addressResponseNew.setLane2(updatedAddress.getLane2());
-        addressResponseNew.setZip(updatedAddress.getZip());
-        addressResponseNew.setState(updatedAddress.getState());
-        return addressResponseNew;
     }
 
 
