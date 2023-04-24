@@ -10,12 +10,12 @@ import com.ogunkuade.microservicesmanager.service.UserRestService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserRestController {
 
 
@@ -26,36 +26,55 @@ public class UserRestController {
     }
 
 
-    @GetMapping("/users/username/{username}/check")
+    //CHECK FOR USER BY ID
+    @GetMapping("/{id}/checkId")
+    public Boolean checkForId(Long id){
+        return userRestService.checkForId(id);
+    }
+
+
+    //CHECK FOR USER BY USERNAME
+    @GetMapping("/{username}/check")
     public Boolean checkingForUsername(@PathVariable String username){
         return userRestService.checkForUsername(username);
     };
 
-    @GetMapping("/users/{username}")
+
+    //GET USER BY USERNAME
+    @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
     public User gettingUser(@PathVariable String username) throws UserNotFoundException {
         return userRestService.getUser(username);
     }
 
-    @GetMapping("/users/all")
+
+    //GET ALL USERS
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<User> gettingAllUsers(){
         return userRestService.getAllUsers();
     }
 
-    @PostMapping("/users/register")
+
+    //CREATE USER
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public User creatingUser(@Valid @RequestBody User User) throws UserAlreadyExistsException, UnmatchedPasswordException {
         return userRestService.createUser(User);
     }
 
-    @PutMapping("/users/{username}/update")
+
+
+    //UPDATE USER BY USERNAME
+    @PutMapping("/{username}/update")
     @ResponseStatus(HttpStatus.OK)
     public User updatingUser(@Valid @RequestBody User User, @PathVariable String username) throws UserNotFoundException{
         return userRestService.updateUser(User, username);
     }
 
-    @DeleteMapping("/users/{username}/delete")
+
+    //DELETE USER BY USERNAME
+    @DeleteMapping("/{username}/delete")
     @ResponseStatus(HttpStatus.OK)
     public String deletingUser(@PathVariable String username) throws UserNotFoundException {
         return userRestService.deleteUser(username);

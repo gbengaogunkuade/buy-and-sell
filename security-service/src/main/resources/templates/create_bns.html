@@ -17,7 +17,7 @@
             </div>
             <div class="card-block" style="padding: 24px;">
 
-                <form th:action="@{/products/create}" method="post" th:object="${bnsProductRequest}" enctype="multipart/form-data">
+                <form th:action="@{/products/create}" method="post" th:object="${productRequestDto}" enctype="multipart/form-data">
 
                     <fieldset>
                         <div class="form-group">

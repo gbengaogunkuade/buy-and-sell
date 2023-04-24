@@ -3,22 +3,17 @@ package com.ogunkuade.microservicesmanager.dto;
 
 import lombok.*;
 
-import java.util.List;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class ProductImageResponse {
+public class UserImageResponseDto {
 
     private Long id;
-    private Long productId;
-    private List<byte[]> imageList;
-
-
-
-
+    private String name;
+    private byte[] image;
+    private Long userId;
 
 }

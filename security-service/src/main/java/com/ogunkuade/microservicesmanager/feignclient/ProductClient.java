@@ -1,7 +1,7 @@
 package com.ogunkuade.microservicesmanager.feignclient;
 
-import com.ogunkuade.microservicesmanager.dto.ProductRequest;
-import com.ogunkuade.microservicesmanager.dto.ProductResponse;
+import com.ogunkuade.microservicesmanager.dto.ProductRequestDto;
+import com.ogunkuade.microservicesmanager.dto.ProductResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,7 @@ public interface ProductClient {
 
 
     @PostMapping("/create")
-    ProductResponse createProduct(@RequestBody ProductRequest productRequest);
+    ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequest);
 
 
 

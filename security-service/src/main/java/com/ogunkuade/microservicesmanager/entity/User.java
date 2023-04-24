@@ -3,7 +3,6 @@ package com.ogunkuade.microservicesmanager.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.Collection;
 
 

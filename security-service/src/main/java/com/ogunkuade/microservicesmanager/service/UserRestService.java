@@ -34,17 +34,22 @@ public class UserRestService {
     }
 
 
+
+    //CHECK FOR USER BY ID
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Boolean checkForId(Long id){
         return userRepository.existsById(id);
     }
 
 
+    //CHECK FOR USER BY USERNAME
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Boolean checkForUsername(String username){
         return userRepository.existsByUsername(username);
     };
 
+
+    //GET USER BY USERNAME
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public User getUser(String username) throws UserNotFoundException {
         if(userRepository.existsByUsername(username)){
@@ -54,15 +59,19 @@ public class UserRestService {
         }
     }
 
+
+
+    //GET ALL USERS
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
 
-//    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
-    public User createUser(User user) throws UserAlreadyExistsException, UnmatchedPasswordException {
 
+
+    //CREATE USER
+    public User createUser(User user) throws UserAlreadyExistsException, UnmatchedPasswordException {
         if(userRepository.existsByUsername(user.getUsername())){
             throw new UserAlreadyExistsException(String.format("a user with the username %s already exist", user.getUsername()));
         }
@@ -96,6 +105,8 @@ public class UserRestService {
     }
 
 
+
+    //UPDATE USER BY USERNAME
     public User updateUser(User user, String username) throws UserNotFoundException {
         if(userRepository.existsByUsername(username)){
             User userToBeUpdated = userRepository.findByUsername(username);
@@ -110,6 +121,8 @@ public class UserRestService {
     }
 
 
+
+    //DELETE USER BY USERNAME
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public String deleteUser(@PathVariable String username) throws UserNotFoundException {
         if(userRepository.existsByUsername(username)){

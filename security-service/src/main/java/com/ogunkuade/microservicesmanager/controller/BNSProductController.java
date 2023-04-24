@@ -1,7 +1,7 @@
 package com.ogunkuade.microservicesmanager.controller;
 
 
-import com.ogunkuade.microservicesmanager.dto.BNSProductRequest;
+import com.ogunkuade.microservicesmanager.dto.ProductRequestDto;
 import com.ogunkuade.microservicesmanager.service.BNSProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +42,8 @@ public class BNSProductController {
 
 
     @PostMapping("/products/create")
-    public String creatingBNS_Success(BNSProductRequest bnsProductRequest, @RequestParam MultipartFile[] my_photos) throws IOException {
-        return bNSProductService.createBNS_Success(bnsProductRequest, my_photos);
+    public String creatingBNS_Success(ProductRequestDto productRequestDto, @RequestParam MultipartFile[] my_photos) throws IOException {
+        return bNSProductService.createBNS_Success(productRequestDto, my_photos);
     }
 
 
