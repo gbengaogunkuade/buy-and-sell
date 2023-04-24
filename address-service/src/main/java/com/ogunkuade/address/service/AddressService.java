@@ -89,8 +89,8 @@ public class AddressService {
     public List<AddressResponse> getAllAddressesWithPagination(int pageNumber, int pageSize){
         List<AddressResponse> addressResponseList = new ArrayList<>();
 
-        Page<Address> addressListWithPagination = addressRepository.findAll(PageRequest.of(pageNumber, pageSize));
-        List<Address> addressList = addressListWithPagination.stream().toList();
+        Page<Address> paginatedAddressList = addressRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        List<Address> addressList = paginatedAddressList.stream().toList();
 
         for(Address address : addressList){
             AddressResponse addressResponse = new AddressResponse();
