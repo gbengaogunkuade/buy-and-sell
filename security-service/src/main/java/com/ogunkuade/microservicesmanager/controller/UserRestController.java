@@ -89,7 +89,7 @@ public class UserRestController {
 
 
     //DELETE USER BY ID
-    @DeleteMapping("/{username}/delete")
+    @DeleteMapping("/{id}/delete")
     @ResponseStatus(HttpStatus.OK)
     public String deletingUserById(@PathVariable Long id) throws UserNotFoundException {
         return userRestService.deleteUserById(id);
