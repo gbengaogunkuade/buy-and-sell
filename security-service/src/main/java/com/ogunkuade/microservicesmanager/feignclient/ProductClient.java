@@ -31,22 +31,22 @@ public interface ProductClient {
 
     //GET PRODUCT BY SELLER ID
     @GetMapping("/{id}/sellerId")
-    List<ProductResponseDto> gettingProductsBySellerId(@PathVariable Long id) throws FileNotFoundException;
+    List<ProductResponseDto> gettingProductsBySellerId(@PathVariable Long id);
 
 
     //GET PRODUCT BY NAME
     @GetMapping("/{name}")
-    ProductResponseDto gettingProductByName(@PathVariable String name) throws Exception;
+    ProductResponseDto gettingProductByName(@PathVariable String name);
 
 
     //GET PRODUCT BY ID
     @GetMapping("/{id}")
-    ProductResponseDto gettingProductById(@PathVariable Long id) throws Exception;
+    ProductResponseDto gettingProductById(@PathVariable Long id);
 
 
     //DELETE PRODUCT BY ID
     @DeleteMapping("/{id}/delete")
-    String deletingProductById(@PathVariable Long id) throws Exception;
+    String deletingProductById(@PathVariable Long id);
 
 
 

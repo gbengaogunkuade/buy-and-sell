@@ -1,10 +1,12 @@
 package com.ogunkuade.images.controller;
 
 
+import com.ogunkuade.images.dto.ImageRequest;
 import com.ogunkuade.images.dto.ImageRequestRecord;
 import com.ogunkuade.images.dto.ProductImageResponse;
 import com.ogunkuade.images.service.ProductImageRestService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +25,24 @@ public class ProductImageRestController {
 
     //POST SINGLE IMAGE
     @PostMapping("/product-image/{id}/upload")
-    public ProductImageResponse imageRestUploading(@RequestBody ImageRequestRecord imageRequestRecord, @PathVariable Long id) throws IOException {
-        return productImageRestService.imageRestUpload(imageRequestRecord, id);
+    public ProductImageResponse imageRestUploading(@RequestBody ImageRequest imageRequest, @PathVariable Long id) throws IOException {
+        return productImageRestService.imageRestUpload(imageRequest, id);
+    }
+
+
+
+//    //POST MULTIPLE IMAGE
+//    @PostMapping("/product-image/{id}/multiple-upload")
+//    public List<ProductImageResponse> imageRestUploadingMultiple(@RequestParam MultipartFile[] imageList, @PathVariable Long id) throws IOException {
+//        return productImageRestService.imageRestUploadMultiple(imageList, id);
+//    }
+
+
+
+    //POST MULTIPLE IMAGE
+    @PostMapping("/product-image/{id}/multiple-upload")
+    public List<ProductImageResponse> imageRestUploadingMultiple(@RequestBody List<ImageRequest> imageRequestList, @PathVariable Long id) throws IOException {
+        return productImageRestService.imageRestUploadMultiple(imageRequestList, id);
     }
 
 

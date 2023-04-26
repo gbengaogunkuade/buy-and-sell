@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class BNSProductRequestDto {
+public class BNSProductUpdateRequestDto {
 
     //PRODUCT
     @NotBlank(message = "product name must not be blank")
@@ -35,16 +35,9 @@ public class BNSProductRequestDto {
     @NotNull(message = "product category must not be null")
     private String category;
 
-    @NotBlank(message = "sellerId must not be blank")
-    @NotEmpty(message = "sellerId must not be empty")
-    @NotNull(message = "sellerId must not be null")
-    @Min(value = 1L, message = "sellerId must be greater than or equal to 1")
-    @Max(value = 9999999999L, message = "sellerId must be less than or equal to 9999999999")
-    private Long sellerId;
-
-    //PRODUCT IMAGE
-    private String productImage_name;
-    private byte[] productImage_image;
+//    //PRODUCT IMAGE
+//    private String productImage_name;
+//    private byte[] productImage_image;
 
 
 

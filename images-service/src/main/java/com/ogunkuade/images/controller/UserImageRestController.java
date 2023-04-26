@@ -55,6 +55,7 @@ public class UserImageRestController {
     }
 
 
+
     //GET A SAMPLE IMAGE FOR TESTING
     @GetMapping("/user-image/sample/{id}")
     @ResponseStatus(HttpStatus.OK)

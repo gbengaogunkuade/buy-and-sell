@@ -4,6 +4,8 @@ package com.ogunkuade.microservicesmanager.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,10 +16,8 @@ public class BNSProductResponseDto {
 
     //PRODUCT
     private ProductResponseDto productResponseDto;
-    //USER
-    private UserResponseDto userResponseDto;
     //IMAGE
-    private ProductImageResponseDto productImageResponseDto;
+    private List<ProductImageResponseDto> productImageResponseDtoList;
 
 }
 

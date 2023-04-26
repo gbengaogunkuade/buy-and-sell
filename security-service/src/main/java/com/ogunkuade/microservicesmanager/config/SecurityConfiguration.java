@@ -82,6 +82,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/api/token").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/token-information").permitAll()
                 .requestMatchers("/api/register").permitAll()
+                .requestMatchers("/api/products/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
