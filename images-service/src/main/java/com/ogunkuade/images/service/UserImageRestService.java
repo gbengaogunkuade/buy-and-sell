@@ -97,7 +97,7 @@ public class UserImageRestService {
 
 
 
-
+    //GET SINGLE IMAGE BY USER ID
     public UserImageResponse getRestImageByUserId(Long id) throws IOException {
         if(userImageRepository.existsByUserId(id)){
             userImage = userImageRepository.findImageByUserId(id);

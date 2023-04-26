@@ -30,7 +30,7 @@ public class UserImageRestController {
     }
 
 
-    //GET SINGLE IMAGE
+    //GET SINGLE IMAGE BY ID
     @GetMapping("/user-image/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserImageResponse gettingRestImage(@PathVariable Long id) throws IOException {
@@ -38,7 +38,7 @@ public class UserImageRestController {
     }
 
 
-    //GET SINGLE IMAGE
+    //GET SINGLE IMAGE BY USER ID
     @GetMapping("/user-image/userId/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserImageResponse gettingRestImageByUserId(@PathVariable Long id) throws IOException {
