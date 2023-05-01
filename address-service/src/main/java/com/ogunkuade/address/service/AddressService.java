@@ -39,7 +39,7 @@ public class AddressService {
         Address address = new Address();
         address.setLane1(addressRequest.getLane1());
         address.setLane2(addressRequest.getLane2());
-        address.setZip(addressRequest.getZip());
+        address.setZip(Long.valueOf(addressRequest.getZip()));
         address.setState(addressRequest.getState());
         Address savedAddress = addressRepository.save(address);
         AddressResponse addressResponse = new AddressResponse(
@@ -59,7 +59,7 @@ public class AddressService {
         Address addressToBeUpdated = addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException(String.format("an address with the id %d does not exist", id)));
         addressToBeUpdated.setLane1(addressRequest.getLane1());
         addressToBeUpdated.setLane2(addressRequest.getLane2());
-        addressToBeUpdated.setZip(addressRequest.getZip());
+        addressToBeUpdated.setZip(Long.valueOf(addressRequest.getZip()));
         addressToBeUpdated.setState(addressRequest.getState());
         Address updatedAddress = addressRepository.save(addressToBeUpdated);
 

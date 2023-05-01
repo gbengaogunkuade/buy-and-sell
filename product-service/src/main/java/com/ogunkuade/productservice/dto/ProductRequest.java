@@ -1,10 +1,7 @@
 package com.ogunkuade.productservice.dto;
 
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.Collection;
@@ -40,7 +37,9 @@ public class ProductRequest {
     @Size(min = 4, max = 20, message = "category must be atleast 4 characters and not more than 200 characters")
     private String category;
 
+//    @Pattern(regexp = "^[0-9A-Z@#$&%*]+$", message = "This accepts 1 range or more than 1 range")
     private Long sellerId;
 
 }
+
 

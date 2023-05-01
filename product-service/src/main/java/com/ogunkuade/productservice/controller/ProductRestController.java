@@ -64,7 +64,7 @@ public class ProductRestController {
 
 
     //GET PRODUCT BY NAME
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse gettingProductByName(@PathVariable String name) throws Exception{
         return productRestService.getProductByName(name);

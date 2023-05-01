@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 
 @Service
@@ -108,7 +109,6 @@ public class BNSRestService {
 
 
 
-
 //    //UPDATE PRODUCT
 //    public BNSProductResponseDto updateProduct(BNSProductUpdateRequestDto bnsProductUpdateRequestDto, Long id){
 //        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
@@ -130,12 +130,57 @@ public class BNSRestService {
 
 
 
+    //GET PRODUCT BY ID
+    public BNSProductResponseDto getProductById(Long id) {
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
+        //get product
+        ProductResponseDto productResponseDto = productClient.gettingProductById(id);
+        //get productImage
+        List<ProductImageResponseDto> productImageResponseDtoList = imageClient.gettingRestImageByProductId(id);
+        if(productResponseDto != null){
+            bnsProductResponseDto.setProductResponseDto(productResponseDto);
+        }
+        if(productImageResponseDtoList != null){
+            bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
+        }
+        return bnsProductResponseDto;
+    }
 
 
 
 
+    //GET ALL PRODUCTS
+    public List<BNSProductResponseDto> getAllProducts() {
+        List<BNSProductResponseDto> bnsProductResponseDtoList = new ArrayList<>();
+        //get all products
+        List<ProductResponseDto> productResponseDtoList = productClient.gettingAllProducts();
+        //iterate through products
+        for(ProductResponseDto productResponseDto : productResponseDtoList){
+            BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
+            bnsProductResponseDto.setProductResponseDto(productResponseDto);
+            //get all productImages for each product
+            List<ProductImageResponseDto> productImageResponseDtoList = imageClient.gettingRestImageByProductId(productResponseDto.getId());
+            bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
+            bnsProductResponseDtoList.add(bnsProductResponseDto);
+        }
+        return bnsProductResponseDtoList;
+    }
 
 
+    public BNSProductResponseDto getProductByName(String name) {
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
+        //get product
+        ProductResponseDto productResponseDto = productClient.gettingProductByName(name);
+        //get productImage
+        List<ProductImageResponseDto> productImageResponseDtoList = imageClient.gettingRestImageByProductId(productResponseDto.getId());
+        if(productResponseDto != null){
+            bnsProductResponseDto.setProductResponseDto(productResponseDto);
+        }
+        if(productImageResponseDtoList != null){
+            bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
+        }
+        return bnsProductResponseDto;
+    }
 
 
 

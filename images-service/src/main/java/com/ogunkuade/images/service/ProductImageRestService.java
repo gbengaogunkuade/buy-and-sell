@@ -102,6 +102,7 @@ public class ProductImageRestService {
     //POST MULTIPLE IMAGE
     public List<ProductImageResponse> imageRestUploadMultiple(List<ImageRequest> imageRequestList, Long id) throws IOException {
         productImageResponseList = new ArrayList<>();
+
         if(productImageRepository.existsByProductId(id)){
             productImageList = productImageRepository.findImagesByProductId(id);
             for(ProductImage productImageX : productImageList){

@@ -35,7 +35,7 @@ public interface ProductClient {
 
 
     //GET PRODUCT BY NAME
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     ProductResponseDto gettingProductByName(@PathVariable String name);
 
 

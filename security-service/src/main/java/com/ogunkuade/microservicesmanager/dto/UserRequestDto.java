@@ -55,6 +55,7 @@ public class UserRequestDto {
     @NotEmpty(message = "email must not be empty")
     @NotNull(message = "email must not be null")
     @Email
+//    @Pattern(regexp = "^[0-9A-Z@#$&%*]+$", message = "This accepts 1 range or more than 1 range")
     private String email;
 
 

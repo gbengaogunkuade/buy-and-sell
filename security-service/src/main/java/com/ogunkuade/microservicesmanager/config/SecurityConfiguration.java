@@ -26,24 +26,29 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import java.util.concurrent.TimeUnit;
+
+
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
+
     @Value("${remember.me.key}")
     private String remember_me_key;
 
+
     private final RsaKeyProperties rsaKeyProperties;
-    private PrincipalUserDetailsService principalUserDetailsService;
+    private final PrincipalUserDetailsService principalUserDetailsService;
+
 
     public SecurityConfiguration(RsaKeyProperties rsaKeyProperties, PrincipalUserDetailsService principalUserDetailsService) {
         this.rsaKeyProperties = rsaKeyProperties;
         this.principalUserDetailsService = principalUserDetailsService;
     }
+
 
     @Bean
     JwtDecoder jwtDecoder(){
@@ -57,16 +62,19 @@ public class SecurityConfiguration {
         return new NimbusJwtEncoder(jwkSource);
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
     }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -111,6 +119,9 @@ public class SecurityConfiguration {
                 .headers(headers -> headers.frameOptions().sameOrigin());
                 return http.build();
     }
+
+
+
 
 
 }
