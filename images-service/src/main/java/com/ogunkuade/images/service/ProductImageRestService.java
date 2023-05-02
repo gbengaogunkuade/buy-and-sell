@@ -144,6 +144,8 @@ public class ProductImageRestService {
 
 
 
+
+
     //GET IMAGES BY PRODUCT ID
     public List<ProductImageResponse> getRestImageByProductId(Long id) throws IOException {
         if(productImageRepository.existsByProductId(id)){
@@ -165,6 +167,8 @@ public class ProductImageRestService {
 
 
 
+
+
     //GET ALL IMAGES
     public List<ProductImageResponse> getAllRestImage() {
         productImageResponseList = new ArrayList<>();
@@ -178,6 +182,17 @@ public class ProductImageRestService {
             productImageResponseList.add(productImageResponse);
         }
         return productImageResponseList;
+    }
+
+
+
+
+
+    //DELETE IMAGE BY ID
+    public String deleteRestImageById(Long id) throws FileNotFoundException {
+        productImage = productImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image Not Found"));
+        productImageRepository.delete(productImage);
+        return "Product Image successfully deleted";
     }
 
 

@@ -8,6 +8,7 @@ import com.ogunkuade.images.service.ProductImageRestService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ProductImageRestController {
     public ProductImageRestController(ProductImageRestService productImageRestService) {
         this.productImageRestService = productImageRestService;
     }
+
 
 
     //POST SINGLE IMAGE
@@ -61,11 +63,22 @@ public class ProductImageRestController {
     }
 
 
+
     //GET ALL IMAGES
     @GetMapping("/product-image/all")
     public List<ProductImageResponse> gettingAllRestImage() {
         return productImageRestService.getAllRestImage();
     }
+
+
+
+
+    //DELETE IMAGE BY ID
+    @DeleteMapping("/product-image/{id}/delete")
+    public String deletingRestImageById(@PathVariable Long id) throws FileNotFoundException {
+        return productImageRestService.deleteRestImageById(id);
+    }
+
 
 
 

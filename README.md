@@ -1,8 +1,7 @@
 # BUY-AND-SELL
-This is an Ecommerce Application being developed by Gbenga Ogunkuade
+This is an Ecommerce Application being developed by GBENGA OGUNKUADE
 
-- This is an ongoing project...watch out for the finished product...
-- The App will be made up of multiple microservices, all working to deliver a wonderful ecommerce platform for users to sell and buy products.
+- This Ecommerce App is made up of multiple microservices, all working to deliver a wonderful ecommerce platform for users to sell and buy products.
 
 ## Microservices:
 - Gateway-Service (to be added)
@@ -15,5 +14,5 @@ This is an Ecommerce Application being developed by Gbenga Ogunkuade
 
 
 ### This is another Fullstack project.
+- This is an ongoing project...watch out for the finished project.
 
-Watch out for the finished project.

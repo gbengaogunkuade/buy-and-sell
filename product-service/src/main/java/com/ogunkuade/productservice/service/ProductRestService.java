@@ -34,19 +34,27 @@ public class ProductRestService {
         this.productRepository = productRepository;
     }
 
-    private List<ProductResponse> getListOfProductResponseFromListOfProduct(){
-        for(Product product :  productList){
-            ProductResponse productResponse = new ProductResponse();
-            productResponse.setId(product.getId());
-            productResponse.setName(product.getName());
-            productResponse.setDescription(product.getDescription());
-            productResponse.setAmount(product.getAmount());
-            productResponse.setCategory(product.getCategory());
-            productResponse.setAvailable(product.getAvailable());
-            productResponse.setSellerId(product.getSellerId());
-            productResponseList.add(productResponse);
-        }
-        return productResponseList;
+//    private List<ProductResponse> getListOfProductResponseFromListOfProduct(){
+//        for(Product product :  productList){
+//            ProductResponse productResponse = new ProductResponse();
+//            productResponse.setId(product.getId());
+//            productResponse.setName(product.getName());
+//            productResponse.setDescription(product.getDescription());
+//            productResponse.setAmount(product.getAmount());
+//            productResponse.setCategory(product.getCategory());
+//            productResponse.setAvailable(product.getAvailable());
+//            productResponse.setSellerId(product.getSellerId());
+//            productResponseList.add(productResponse);
+//        }
+//        return productResponseList;
+//    }
+
+
+
+
+    //CHECK FOR PRODUCT ID
+    public Boolean checkForProductId(Long id) {
+        return productRepository.existsById(id);
     }
 
 
@@ -98,69 +106,69 @@ public class ProductRestService {
 
 
 
-//    //GET ALL PRODUCTS
-//    public List<ProductResponse> getAllProducts(){
-//        productResponseList = new ArrayList<>();
-//        productList = productRepository.findAll();
-//        for(Product product :  productList){
-//            ProductResponse productResponse = new ProductResponse();
-//            productResponse.setId(product.getId());
-//            productResponse.setName(product.getName());
-//            productResponse.setDescription(product.getDescription());
-//            productResponse.setAmount(product.getAmount());
-//            productResponse.setCategory(product.getCategory());
-//            productResponse.setAvailable(product.getAvailable());
-//            productResponse.setSellerId(product.getSellerId());
-//            productResponseList.add(productResponse);
-//        }
-//        return productResponseList;
-//    }
-
-
-
     //GET ALL PRODUCTS
     public List<ProductResponse> getAllProducts(){
         productResponseList = new ArrayList<>();
         productList = productRepository.findAll();
-        return getListOfProductResponseFromListOfProduct();
+        for(Product product :  productList){
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(product.getId());
+            productResponse.setName(product.getName());
+            productResponse.setDescription(product.getDescription());
+            productResponse.setAmount(product.getAmount());
+            productResponse.setCategory(product.getCategory());
+            productResponse.setAvailable(product.getAvailable());
+            productResponse.setSellerId(product.getSellerId());
+            productResponseList.add(productResponse);
+        }
+        return productResponseList;
     }
 
 
 
-//    //GET PRODUCTS BY SELLER ID
-//    public List<ProductResponse> getProductsBySellerId(Long id) throws FileNotFoundException {
-//        List<ProductResponse> productResponseList = new ArrayList<>();
-//        if(productRepository.existsProductBySellerId(id)){
-//            productList = productRepository.findProductsBySellerId(id);
-//            for(Product product : productList){
-//                productResponse = new ProductResponse();
-//                productResponse.setId(product.getId());
-//                productResponse.setName(product.getName());
-//                productResponse.setDescription(product.getDescription());
-//                productResponse.setAmount(product.getAmount());
-//                productResponse.setCategory(product.getCategory());
-//                productResponse.setAvailable(product.getAvailable());
-//                productResponse.setSellerId(product.getSellerId());
-//                productResponseList.add(productResponse);
-//            }
-//            return productResponseList;
-//        } else{
-//            throw new FileNotFoundException("NO PRODUCT FOUND FOR THIS SELLER ID");
-//        }
+//    //GET ALL PRODUCTS
+//    public List<ProductResponse> getAllProducts(){
+//        productResponseList = new ArrayList<>();
+//        productList = productRepository.findAll();
+//        return getListOfProductResponseFromListOfProduct();
 //    }
 
 
 
     //GET PRODUCTS BY SELLER ID
     public List<ProductResponse> getProductsBySellerId(Long id) throws FileNotFoundException {
-        productResponseList = new ArrayList<>();
+        List<ProductResponse> productResponseList = new ArrayList<>();
         if(productRepository.existsProductBySellerId(id)){
             productList = productRepository.findProductsBySellerId(id);
-            return getListOfProductResponseFromListOfProduct();
+            for(Product product : productList){
+                productResponse = new ProductResponse();
+                productResponse.setId(product.getId());
+                productResponse.setName(product.getName());
+                productResponse.setDescription(product.getDescription());
+                productResponse.setAmount(product.getAmount());
+                productResponse.setCategory(product.getCategory());
+                productResponse.setAvailable(product.getAvailable());
+                productResponse.setSellerId(product.getSellerId());
+                productResponseList.add(productResponse);
+            }
+            return productResponseList;
         } else{
             throw new FileNotFoundException("NO PRODUCT FOUND FOR THIS SELLER ID");
         }
     }
+
+
+
+//    //GET PRODUCTS BY SELLER ID
+//    public List<ProductResponse> getProductsBySellerId(Long id) throws FileNotFoundException {
+//        productResponseList = new ArrayList<>();
+//        if(productRepository.existsProductBySellerId(id)){
+//            productList = productRepository.findProductsBySellerId(id);
+//            return getListOfProductResponseFromListOfProduct();
+//        } else{
+//            throw new FileNotFoundException("NO PRODUCT FOUND FOR THIS SELLER ID");
+//        }
+//    }
 
 
 
@@ -207,8 +215,6 @@ public class ProductRestService {
         productRepository.delete(product);
         return String.format("PRODUCT WITH THE ID %d SUCCESSFULLY DELETED", id);
     }
-
-
 
 
 

@@ -36,11 +36,12 @@ public class UserRestController {
     }
 
 
+
     //CHECK FOR USER BY USERNAME
     @GetMapping("/{username}/check")
     public Boolean checkingForUsername(@PathVariable String username){
         return userRestService.checkForUsername(username);
-    };
+    }
 
 
 
@@ -70,6 +71,7 @@ public class UserRestController {
     }
 
 
+
     //GET ALL USERS
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
@@ -78,13 +80,14 @@ public class UserRestController {
     }
 
 
+
+
     //GET ALL USERS WITH PAGINATION
     @GetMapping("/all/page")
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponseDto> gettingAllUsersWithPagination(@RequestParam int pageNumber, @RequestParam int pageSize){
         return userRestService.getAllUsersWithPagination(pageNumber, pageSize);
     }
-
 
 
 

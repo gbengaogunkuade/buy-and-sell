@@ -7,6 +7,7 @@ import com.ogunkuade.microservicesmanager.dto.UserUpdateRequestDto;
 import com.ogunkuade.microservicesmanager.entity.Role;
 import com.ogunkuade.microservicesmanager.entity.User;
 import com.ogunkuade.microservicesmanager.enums.RoleType;
+import com.ogunkuade.microservicesmanager.exception.UnauthorizedRequestException;
 import com.ogunkuade.microservicesmanager.exception.UnmatchedPasswordException;
 import com.ogunkuade.microservicesmanager.exception.UserAlreadyExistsException;
 import com.ogunkuade.microservicesmanager.exception.UserNotFoundException;
@@ -15,6 +16,8 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserRestService {
@@ -112,40 +116,72 @@ public class UserRestService {
 
 
 
+
+
     //UPDATE USER BY ID
     public UserResponseDto updateUserById(UserUpdateRequestDto userUpdateRequestDto, Long id) throws UserNotFoundException {
+
         existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("USER WITH THE ID %d DOES NOT EXISTS", id)));
-        existingUser.setFirstname(userUpdateRequestDto.getFirstname());
-        existingUser.setLastname(userUpdateRequestDto.getLastname());
-        existingUser.setGender(userUpdateRequestDto.getGender());
-        existingUser.setEmail(userUpdateRequestDto.getEmail());
-        savedUser = userRepository.save(existingUser);
-        userResponseDto = new UserResponseDto();
-        userResponseDto.setId(savedUser.getId());
-        userResponseDto.setUsername(savedUser.getUsername());
-        userResponseDto.setFirstname(savedUser.getFirstname());
-        userResponseDto.setLastname(savedUser.getLastname());
-        userResponseDto.setGender(savedUser.getGender());
-        userResponseDto.setEmail(savedUser.getEmail());
-        return userResponseDto;
+        //get loggedInUser
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        //get loggedInUser Authorities
+        List<String> authorityList = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority()).collect(Collectors.toList());
+
+        User loggedInUser = userRepository.findByUsername(username);
+
+        if(loggedInUser.getId().equals(id) || authorityList.contains("SCOPE_ROLE_ADMIN")){
+            existingUser.setFirstname(userUpdateRequestDto.getFirstname());
+            existingUser.setLastname(userUpdateRequestDto.getLastname());
+            existingUser.setGender(userUpdateRequestDto.getGender());
+            existingUser.setEmail(userUpdateRequestDto.getEmail());
+            savedUser = userRepository.save(existingUser);
+            userResponseDto = new UserResponseDto();
+            userResponseDto.setId(savedUser.getId());
+            userResponseDto.setUsername(savedUser.getUsername());
+            userResponseDto.setFirstname(savedUser.getFirstname());
+            userResponseDto.setLastname(savedUser.getLastname());
+            userResponseDto.setGender(savedUser.getGender());
+            userResponseDto.setEmail(savedUser.getEmail());
+            return userResponseDto;
+        } else{
+            throw new UnauthorizedRequestException(String.format("You are not authorized to make this request, only the user %s or an Admin can make this request", existingUser.getUsername()));
+        }
     }
+
 
 
 
 
     //GET USER BY ID
-    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public UserResponseDto getUserById(Long id) throws UserNotFoundException {
+
         existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("USER WITH THE ID %d DOES NOT EXISTS", id)));
-        userResponseDto = new UserResponseDto();
-        userResponseDto.setId(existingUser.getId());
-        userResponseDto.setUsername(existingUser.getUsername());
-        userResponseDto.setFirstname(existingUser.getFirstname());
-        userResponseDto.setLastname(existingUser.getLastname());
-        userResponseDto.setGender(existingUser.getGender());
-        userResponseDto.setEmail(existingUser.getEmail());
-        return userResponseDto;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User userFound = userRepository.findByUsername(username);
+
+        List<String> authorityList = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority()).collect(Collectors.toList());
+
+        if(userFound.getId().equals(id) || authorityList.contains("SCOPE_ROLE_ADMIN")){
+            userResponseDto = new UserResponseDto();
+            userResponseDto.setId(existingUser.getId());
+            userResponseDto.setUsername(existingUser.getUsername());
+            userResponseDto.setFirstname(existingUser.getFirstname());
+            userResponseDto.setLastname(existingUser.getLastname());
+            userResponseDto.setGender(existingUser.getGender());
+            userResponseDto.setEmail(existingUser.getEmail());
+            return userResponseDto;
+        } else{
+            throw new UnauthorizedRequestException(String.format("You are not authorized to make this request, only the user %s or an Admin can make this request", existingUser.getUsername()));
+        }
+
     }
+
+
 
 
 
@@ -170,13 +206,12 @@ public class UserRestService {
 
 
 
+    //GET ALL USERS WITH PAGINATION
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public List<UserResponseDto> getAllUsersWithPagination(int pageNumber, int pageSize){
         userResponseDtoList = new ArrayList<>();
-        System.out.println(userRepository.findAll().size());
         Page<User> paginatedUserList = userRepository.findAll(PageRequest.of(pageNumber, pageSize));
-
         userList = paginatedUserList.stream().toList();
-
         for(User user : userList){
             userResponseDto = new UserResponseDto();
             userResponseDto.setId(user.getId());

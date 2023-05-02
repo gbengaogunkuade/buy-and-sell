@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class BNSRestController {
     }
 
 
+
     //CREATE PRODUCT
     @PostMapping("/create")
     public BNSProductResponseDto creatingProduct(
@@ -34,7 +36,7 @@ public class BNSRestController {
             @RequestParam String category,
             @RequestParam @Pattern(regexp = "^[1-9]+$", message = "SELLERID MUST BE NUMBER ONLY") String sellerId,
             @RequestParam MultipartFile[] imageList
-    ) throws IOException {
+    ) throws Exception {
         return bnsRestService.createProduct(name, description, amount, category, sellerId, imageList);
     }
 
@@ -50,7 +52,7 @@ public class BNSRestController {
             @RequestParam String category,
             @RequestParam String id,
             @RequestParam MultipartFile[] imageList
-    ) throws IOException {
+    ) throws Exception {
         return bnsRestService.updateProduct(name, description, amount, category, id, imageList);
     }
 
@@ -58,7 +60,7 @@ public class BNSRestController {
 
     //GET PRODUCT BY ID
     @GetMapping("/{id}")
-    public BNSProductResponseDto gettingProductById(@PathVariable Long id){
+    public BNSProductResponseDto gettingProductById(@PathVariable Long id) throws Exception {
         return bnsRestService.getProductById(id);
     }
 
@@ -66,7 +68,7 @@ public class BNSRestController {
 
     //GET ALL PRODUCTS
     @GetMapping("/all")
-    public List<BNSProductResponseDto> gettingAllProducts(){
+    public List<BNSProductResponseDto> gettingAllProducts() throws Exception {
         return bnsRestService.getAllProducts();
     }
 
@@ -75,20 +77,27 @@ public class BNSRestController {
 
     //GET PRODUCT BY NAME
     @GetMapping("/name/{name}")
-    public BNSProductResponseDto gettingProductByName(@PathVariable String name){
+    public BNSProductResponseDto gettingProductByName(@PathVariable String name) throws Exception {
         return bnsRestService.getProductByName(name);
     }
 
 
 
 
-    //GET PRODUCT BY SELLERID
+    //GET PRODUCTS BY SELLERID
+    @GetMapping("/seller/{id}")
+    public List<BNSProductResponseDto> gettingProductsBySellerId(@PathVariable Long id) throws Exception {
+        return bnsRestService.getProductBySellerId(id);
+    }
 
 
-    //GET ALL PRODUCTS
 
 
     //DELETE PRODUCT BY ID
+    @DeleteMapping("/{id}/delete")
+    public String deletingProductById(@PathVariable Long id) throws Exception {
+        return bnsRestService.deleteProductById(id);
+    }
 
 
 

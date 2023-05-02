@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,7 +42,12 @@ public interface ImageClient {
 
     //GET ALL IMAGES
     @GetMapping("/product-image/all")
-    public List<ProductImageResponseDto> gettingAllRestImage();
+    List<ProductImageResponseDto> gettingAllRestImage();
+
+
+
+    @DeleteMapping("/product-image/{id}/delete")
+    String deletingRestImageById(@PathVariable Long id);
 
 
 

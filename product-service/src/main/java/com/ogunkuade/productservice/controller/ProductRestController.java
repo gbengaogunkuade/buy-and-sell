@@ -27,6 +27,14 @@ public class ProductRestController {
 
 
 
+    //CHECK FOR PRODUCT ID
+    @GetMapping("/{id}/check")
+    public Boolean checkForProductId(@PathVariable Long id){
+        return productRestService.checkForProductId(id);
+    }
+
+
+
     //CREATE PRODUCT
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
