@@ -7,23 +7,25 @@ import com.ogunkuade.microservicesmanager.feignclient.ImageClient;
 import com.ogunkuade.microservicesmanager.feignclient.ProductClient;
 import com.ogunkuade.microservicesmanager.repository.UserRepository;
 import feign.FeignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+
 
 
 @Service
 public class BNSRestService {
 
-    private ProductClient productClient;
-    private AddressClient addressClient;
-    private ImageClient imageClient;
+    //LOGGING
+    Logger logger = LoggerFactory.getLogger(BNSRestService.class);
+
+    private final ProductClient productClient;
+    private final AddressClient addressClient;
+    private final ImageClient imageClient;
 
     private final UserRepository userRepository;
 
@@ -39,9 +41,8 @@ public class BNSRestService {
 //    @PreAuthorize("isAuthenticated()")
     //CREATE PRODUCT
     public BNSProductResponseDto createProduct(String name, String description, String amount, String category, String sellerId, MultipartFile[] imageList) throws Exception {
-
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
-            BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
             //PRODUCT
             ProductRequestDto productRequestDto = new ProductRequestDto();
             productRequestDto.setName(name);
@@ -70,11 +71,24 @@ public class BNSRestService {
             if(productImageResponseDtoList != null){
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
-            return bnsProductResponseDto;
+
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                throw new Exception("bad request - product creation failed");
+            }
         }
+
+
+        return bnsProductResponseDto;
     }
 
 
@@ -84,9 +98,8 @@ public class BNSRestService {
     //UPDATE PRODUCT
 //    @PreAuthorize("isAuthenticated()")
     public BNSProductResponseDto updateProduct(String name, String description, String amount, String category, String id, MultipartFile[] imageList) throws Exception {
-
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
-            BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
             //PRODUCT
             ProductUpdateRequestDto productUpdateRequestDto = new ProductUpdateRequestDto();
             productUpdateRequestDto.setName(name);
@@ -114,11 +127,23 @@ public class BNSRestService {
             if(productImageResponseDtoList != null){
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
-            return bnsProductResponseDto;
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                throw new Exception("bad request - product update failed");
+            }
         }
+
+        return bnsProductResponseDto;
     }
 
 
@@ -128,8 +153,8 @@ public class BNSRestService {
     //GET PRODUCT BY ID
 //    @PreAuthorize("isAuthenticated()")
     public BNSProductResponseDto getProductById(Long id) throws Exception {
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
-            BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
             //get product
             ProductResponseDto productResponseDto = productClient.gettingProductById(id);
             //get productImage
@@ -142,12 +167,21 @@ public class BNSRestService {
             }
             return bnsProductResponseDto;
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                throw new Exception("bad request - product with this id not found");
+            }
         }
-        catch (FeignException.FeignClientException.BadRequest e2){
-            throw new Exception("product with this id not found");
-        }
+
+        return bnsProductResponseDto;
     }
 
 
@@ -156,9 +190,8 @@ public class BNSRestService {
     //GET ALL PRODUCTS
 //    @PreAuthorize("isAuthenticated()")
     public List<BNSProductResponseDto> getAllProducts() throws Exception {
-
+        List<BNSProductResponseDto> bnsProductResponseDtoList = new ArrayList<>();
         try{
-            List<BNSProductResponseDto> bnsProductResponseDtoList = new ArrayList<>();
             //get all products
             List<ProductResponseDto> productResponseDtoList = productClient.gettingAllProducts();
             //iterate through products
@@ -170,11 +203,23 @@ public class BNSRestService {
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
                 bnsProductResponseDtoList.add(bnsProductResponseDto);
             }
-            return bnsProductResponseDtoList;
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                throw new Exception("bad request");
+            }
         }
+
+        return bnsProductResponseDtoList;
     }
 
 
@@ -183,8 +228,8 @@ public class BNSRestService {
     //GET PRODUCT BY NAME
 //    @PreAuthorize("isAuthenticated()")
     public BNSProductResponseDto getProductByName(String name) throws Exception {
+        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
-            BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
             //get product
             ProductResponseDto productResponseDto = productClient.gettingProductByName(name);
             //get productImage
@@ -195,16 +240,25 @@ public class BNSRestService {
             if(productImageResponseDtoList != null){
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
-            return bnsProductResponseDto;
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
-        }
-        catch (FeignException.FeignClientException.BadRequest e2){
-            throw new Exception("product with this name not found");
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
+                throw new Exception("bad request - product with this name not found");
+            }
         }
 
+        return bnsProductResponseDto;
     }
+
 
 
 
@@ -224,15 +278,25 @@ public class BNSRestService {
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
                 bnsProductResponseDtoList.add(bnsProductResponseDto);
             }
-            return bnsProductResponseDtoList;
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
+                throw new Exception("bad request - products for this seller not found");
+            }
         }
-        catch (FeignException.FeignClientException.BadRequest e2){
-            throw new Exception("products for this seller not found");
-        }
+
+        return bnsProductResponseDtoList;
     }
+
 
 
 
@@ -246,14 +310,23 @@ public class BNSRestService {
             productClient.deletingProductById(id);
             //get productImages
             imageClient.deletingRestImageById(id);
-            return "Product successfully deleted";
         }
-        catch (FeignException.FeignClientException.ServiceUnavailable e1){
-            throw new Exception("client unavailable");
+        catch (Exception e){
+            if (e instanceof NullPointerException) {
+                logger.error("NULL POINTER EXCEPTION");
+                throw new Exception("null pointer exception");
+            }
+            if (e instanceof FeignException.ServiceUnavailable) {
+                logger.error("CLIENT IS UNAVAILABLE");
+                throw new Exception("client unavailable");
+            }
+            if (e instanceof FeignException.BadRequest) {
+                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
+                throw new Exception("bad request - product with this id not found");
+            }
         }
-        catch (FeignException.FeignClientException.BadRequest e2){
-            throw new Exception("product with this id not found");
-        }
+
+        return "Product successfully deleted";
     }
 
 

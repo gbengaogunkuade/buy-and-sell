@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!--Using LOGBACK XML File to configure Logging-->
+
+    <property name="myLogFileLocation" value="log-files/trace.log" />
+
+    <!--logging to console-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--logging to file-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--log file-->
+        <file>log-files/trace.log</file>
+        <!--retention policy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log-files/archived/trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--maximum size of each archived log file-->
+            <maxFileSize>10KB</maxFileSize>
+            <!--maximum size of the total size of all archived log files-->
+            <totalSizeCap>2MB</totalSizeCap>
+            <!--maximum numbers of days to keep logs-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <!--logging pattern-->
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+
+    </appender>
+
+
+    <!--sending the root log to console-->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+
+    <!--sending the logs of com.ogunkuade package to both file and console-->
+    <logger name="com.ogunkuade" level="TRACE">
+        <appender-ref ref="FILE" />
+    </logger>
+
+
+
+</configuration>

@@ -192,6 +192,8 @@ public class ProductRestService {
     }
 
 
+
+
     //GET PRODUCT BY ID
     public ProductResponse getProductById(Long id) throws Exception{
         product = productRepository.findById(id).orElseThrow(() -> new FileNotFoundException("PRODUCT WITH THIS ID NOT FOUND"));
