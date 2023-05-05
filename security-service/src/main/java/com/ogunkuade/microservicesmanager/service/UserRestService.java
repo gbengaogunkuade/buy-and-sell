@@ -22,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +66,7 @@ public class UserRestService {
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Boolean checkForUsername(String username){
         return userRepository.existsByUsername(username);
-    };
+    }
 
 
 
@@ -104,6 +103,10 @@ public class UserRestService {
             );
         }
         savedUser = userRepository.save(user);
+        //save user image
+
+
+
         userResponseDto = new UserResponseDto();
         userResponseDto.setId(savedUser.getId());
         userResponseDto.setUsername(savedUser.getUsername());
@@ -235,6 +238,7 @@ public class UserRestService {
         userRepository.delete(user);
         return String.format("USER WITH ID %d SUCCESSFULLY DELETED", id);
     }
+
 
 
 

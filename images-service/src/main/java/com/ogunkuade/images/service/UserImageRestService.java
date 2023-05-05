@@ -1,8 +1,11 @@
 package com.ogunkuade.images.service;
 
 
+import com.ogunkuade.images.dto.ImageRequest;
 import com.ogunkuade.images.dto.ImageRequestRecord;
+import com.ogunkuade.images.dto.ProductImageResponse;
 import com.ogunkuade.images.dto.UserImageResponse;
+import com.ogunkuade.images.entity.ProductImage;
 import com.ogunkuade.images.entity.UserImage;
 import com.ogunkuade.images.repository.UserImageRepository;
 import org.slf4j.Logger;
@@ -51,12 +54,12 @@ public class UserImageRestService {
 
 
     //POST SINGLE IMAGES
-    public UserImageResponse imageRestUpload(@RequestBody ImageRequestRecord imageRequestRecord, Long id) throws IOException {
+    public UserImageResponse userImageRestUpload(ImageRequest imageRequest, Long id) throws IOException {
         if(userImageRepository.existsByUserId(id)){
             logger.warn("IMAGE FOR THIS USER ALREADY EXIST, OVERWRITING PREVIOUS IMAGE");
             userImage = userImageRepository.findImageByUserId(id);
-            userImage.setName(imageRequestRecord.name());
-            userImage.setImage(imageRequestRecord.image());
+            userImage.setName(imageRequest.getName());
+            userImage.setImage(imageRequest.getImage());
             UserImage savedImage = userImageRepository.save(userImage);
             userImageResponse = new UserImageResponse();
             userImageResponse.setId(savedImage.getId());
@@ -67,8 +70,8 @@ public class UserImageRestService {
         } else{
             //SAVING IMAGES TO DATABASE
             userImage = new UserImage();
-            userImage.setName(imageRequestRecord.name());
-            userImage.setImage(imageRequestRecord.image());
+            userImage.setName(imageRequest.getName());
+            userImage.setImage(imageRequest.getImage());
             userImage.setUserId(id);
             UserImage savedImage = userImageRepository.save(userImage);
             userImageResponse = new UserImageResponse();
@@ -78,14 +81,17 @@ public class UserImageRestService {
             userImageResponse.setUserId(savedImage.getUserId());
             return userImageResponse;
         }
-
     }
 
 
 
 
+
+
+
+
     //GET SINGLE IMAGE
-    public UserImageResponse getRestImage(Long id) throws IOException {
+    public UserImageResponse getUserRestImage(Long id) throws IOException {
         userImage = userImageRepository.findById(id).orElseThrow(() -> new FileNotFoundException("Image not found"));
         userImageResponse = new UserImageResponse();
         userImageResponse.setId(userImage.getId());
@@ -98,7 +104,7 @@ public class UserImageRestService {
 
 
     //GET SINGLE IMAGE BY USER ID
-    public UserImageResponse getRestImageByUserId(Long id) throws IOException {
+    public UserImageResponse getUserRestImageByUserId(Long id) throws IOException {
         if(userImageRepository.existsByUserId(id)){
             userImage = userImageRepository.findImageByUserId(id);
             userImageResponse = new UserImageResponse();
@@ -115,7 +121,7 @@ public class UserImageRestService {
 
 
     //GET ALL IMAGES
-    public List<UserImageResponse> getAllRestImage() {
+    public List<UserImageResponse> getAllUserRestImage() {
         userImageResponseList = new ArrayList<>();
         userImageList = userImageRepository.findAll();
         for(UserImage userImage : userImageList){

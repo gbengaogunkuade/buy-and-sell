@@ -1,7 +1,7 @@
 package com.ogunkuade.images.controller;
 
 
-import com.ogunkuade.images.dto.ImageRequestRecord;
+import com.ogunkuade.images.dto.ImageRequest;
 import com.ogunkuade.images.dto.UserImageResponse;
 import com.ogunkuade.images.service.UserImageRestService;
 import org.springframework.http.HttpStatus;
@@ -25,24 +25,24 @@ public class UserImageRestController {
     //POST SINGLE IMAGE
     @PostMapping("/user-image/{id}/upload")
     @ResponseStatus(HttpStatus.OK)
-    public UserImageResponse imageRestUploading(@RequestBody ImageRequestRecord imageRequestRecord, @PathVariable Long id) throws IOException {
-        return userImageRestService.imageRestUpload(imageRequestRecord, id);
+    public UserImageResponse userImageRestUploading(@RequestBody ImageRequest imageRequest, @PathVariable Long id) throws IOException {
+        return userImageRestService.userImageRestUpload(imageRequest, id);
     }
 
 
     //GET SINGLE IMAGE BY ID
     @GetMapping("/user-image/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserImageResponse gettingRestImage(@PathVariable Long id) throws IOException {
-        return userImageRestService.getRestImage(id);
+    public UserImageResponse gettingUserRestImage(@PathVariable Long id) throws IOException {
+        return userImageRestService.getUserRestImage(id);
     }
 
 
     //GET SINGLE IMAGE BY USER ID
     @GetMapping("/user-image/userId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserImageResponse gettingRestImageByUserId(@PathVariable Long id) throws IOException {
-        return userImageRestService.getRestImageByUserId(id);
+    public UserImageResponse gettingUserRestImageByUserId(@PathVariable Long id) throws IOException {
+        return userImageRestService.getUserRestImageByUserId(id);
     }
 
 
@@ -50,8 +50,8 @@ public class UserImageRestController {
     //GET ALL IMAGES
     @GetMapping("/user-image/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserImageResponse> gettingAllRestImage() {
-        return userImageRestService.getAllRestImage();
+    public List<UserImageResponse> gettingAllUserRestImage() {
+        return userImageRestService.getAllUserRestImage();
     }
 
 
@@ -59,7 +59,7 @@ public class UserImageRestController {
     //GET A SAMPLE IMAGE FOR TESTING
     @GetMapping("/user-image/sample/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public byte[] gettingSampleImage(@PathVariable Long id) throws FileNotFoundException {
+    public byte[] gettingSampleUserImage(@PathVariable Long id) throws FileNotFoundException {
         return userImageRestService.getSampleImage(id);
     }
 

@@ -1,6 +1,7 @@
 package com.ogunkuade.microservicesmanager.exception;
 
 
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -38,9 +39,10 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException accessDeniedException){
-        ExceptionResponse errorResponse = new ExceptionResponse(new Date(), "ACCESS DENIED EXCEPTION", "Sorry, only a user with Admin role can perform this task");
+        ExceptionResponse errorResponse = new ExceptionResponse(new Date(), "ACCESS DENIED EXCEPTION", "Sorry, Access Denied For This Request");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
 
 
     //_____EXCEPTION HANDLER FOR UserNotFoundException EXCEPTION____
@@ -75,6 +77,15 @@ public class GlobalExceptionHandler {
     }
 
 
+    //_____EXCEPTION HANDLER FOR AddressNotFoundException EXCEPTIONS____
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleAddressNotFoundException(AddressNotFoundException addressNotFoundException){
+        ExceptionResponse errorResponse = new ExceptionResponse(new Date(), "ADDRESS NOT FOUND", addressNotFoundException.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+
+
     //_____EXCEPTION HANDLER FOR OTHER EXCEPTIONS____
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception){
@@ -83,12 +94,6 @@ public class GlobalExceptionHandler {
     }
 
 
-    //_____EXCEPTION HANDLER FOR AddressNotFoundException EXCEPTIONS____
-    @ExceptionHandler(AddressNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleAddressNotFoundException(AddressNotFoundException addressNotFoundException){
-        ExceptionResponse errorResponse = new ExceptionResponse(new Date(), "ADDRESS NOT FOUND", addressNotFoundException.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
 
 
 

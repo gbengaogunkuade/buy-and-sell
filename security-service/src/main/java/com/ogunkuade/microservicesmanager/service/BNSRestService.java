@@ -2,16 +2,28 @@ package com.ogunkuade.microservicesmanager.service;
 
 
 import com.ogunkuade.microservicesmanager.dto.*;
+import com.ogunkuade.microservicesmanager.entity.User;
+import com.ogunkuade.microservicesmanager.exception.UserNotFoundException;
 import com.ogunkuade.microservicesmanager.feignclient.AddressClient;
 import com.ogunkuade.microservicesmanager.feignclient.ImageClient;
 import com.ogunkuade.microservicesmanager.feignclient.ProductClient;
 import com.ogunkuade.microservicesmanager.repository.UserRepository;
 import feign.FeignException;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +41,9 @@ public class BNSRestService {
 
     private final UserRepository userRepository;
 
+    @Autowired
+    private UserRestService userRestService;
+
     public BNSRestService(ProductClient productClient, AddressClient addressClient, ImageClient imageClient, UserRepository userRepository) {
         this.productClient = productClient;
         this.addressClient = addressClient;
@@ -38,32 +53,39 @@ public class BNSRestService {
 
 
 
-//    @PreAuthorize("isAuthenticated()")
+
+//PRODUCT SERVICES
+
+
     //CREATE PRODUCT
-    public BNSProductResponseDto createProduct(String name, String description, String amount, String category, String sellerId, MultipartFile[] imageList) throws Exception {
+    @PreAuthorize("isAuthenticated()")
+    public BNSProductResponseDto createProduct(String name, String description, String amount, String category,  MultipartFile[] imageList) throws Exception {
         BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
+            //SECURITY
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User userFound = null;
+            if(userRepository.existsByUsername(username)){
+                userFound = userRepository.findByUsername(username);
+            }
             //PRODUCT
             ProductRequestDto productRequestDto = new ProductRequestDto();
             productRequestDto.setName(name);
             productRequestDto.setDescription(description);
             productRequestDto.setAmount(amount);
             productRequestDto.setCategory(category);
-            productRequestDto.setSellerId(Long.valueOf(sellerId));
+            productRequestDto.setSellerId(userFound.getId());
             ProductResponseDto productResponseDto = productClient.createProduct(productRequestDto);
-
             //IMAGE
             List<ImageRequest> imageRequestList = new ArrayList<>();
-
             for(MultipartFile image : imageList){
                 ImageRequest imageRequest = new ImageRequest();
                 imageRequest.setName(image.getOriginalFilename());
                 imageRequest.setImage(image.getBytes());
                 imageRequestList.add(imageRequest);
             }
-
             List<ProductImageResponseDto> productImageResponseDtoList = imageClient.imageRestUploadingMultiple(imageRequestList, productResponseDto.getId());
-
             //RESPONSE
             if(productResponseDto != null){
                 bnsProductResponseDto.setProductResponseDto(productResponseDto);
@@ -71,23 +93,10 @@ public class BNSRestService {
             if(productImageResponseDtoList != null){
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
-
         }
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                throw new Exception("bad request - product creation failed");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
-
         return bnsProductResponseDto;
     }
 
@@ -95,8 +104,9 @@ public class BNSRestService {
 
 
 
+
     //UPDATE PRODUCT
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public BNSProductResponseDto updateProduct(String name, String description, String amount, String category, String id, MultipartFile[] imageList) throws Exception {
         BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
@@ -128,21 +138,9 @@ public class BNSRestService {
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
         }
-
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                throw new Exception("bad request - product update failed");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
         return bnsProductResponseDto;
     }
 
@@ -165,22 +163,10 @@ public class BNSRestService {
             if(productImageResponseDtoList != null){
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
-            return bnsProductResponseDto;
         }
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                throw new Exception("bad request - product with this id not found");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
         return bnsProductResponseDto;
     }
 
@@ -204,21 +190,9 @@ public class BNSRestService {
                 bnsProductResponseDtoList.add(bnsProductResponseDto);
             }
         }
-
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                throw new Exception("bad request");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
         return bnsProductResponseDtoList;
     }
 
@@ -241,21 +215,9 @@ public class BNSRestService {
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
         }
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
-                throw new Exception("bad request - product with this name not found");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
         return bnsProductResponseDto;
     }
 
@@ -279,21 +241,9 @@ public class BNSRestService {
                 bnsProductResponseDtoList.add(bnsProductResponseDto);
             }
         }
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
-            }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
-            }
-            if (e instanceof FeignException.BadRequest) {
-                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
-                throw new Exception("bad request - products for this seller not found");
-            }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
         }
-
         return bnsProductResponseDtoList;
     }
 
@@ -311,22 +261,188 @@ public class BNSRestService {
             //get productImages
             imageClient.deletingRestImageById(id);
         }
-        catch (Exception e){
-            if (e instanceof NullPointerException) {
-                logger.error("NULL POINTER EXCEPTION");
-                throw new Exception("null pointer exception");
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return "Product successfully deleted";
+    }
+
+
+
+
+
+
+
+// USER
+
+
+    //CREATE USER
+    public BNSUserResponseDto createRestUser(String username, String password, String password2, String firstname, String lastname, String gender, String email, MultipartFile image, String lane1, String lane2, String zip, String state) throws Exception {
+        BNSUserResponseDto bnsUserResponseDto = new BNSUserResponseDto();
+        try{
+            //user
+            UserRequestDto userRequestDto = new UserRequestDto();
+            userRequestDto.setUsername(username);
+            userRequestDto.setPassword(password);
+            userRequestDto.setPassword2(password2);
+            userRequestDto.setFirstname(firstname);
+            userRequestDto.setLastname(lastname);
+            userRequestDto.setGender(gender);
+            userRequestDto.setEmail(email);
+            UserResponseDto userResponseDto = userRestService.createUser(userRequestDto);
+            //image
+            ImageRequest imageRequest = new ImageRequest();
+            imageRequest.setName(image.getOriginalFilename());
+            imageRequest.setImage(image.getBytes());
+            UserImageResponseDto userImageResponseDto = imageClient.imageUserRestUploading(imageRequest, userResponseDto.getId());
+            //address
+            AddressRequestDto addressRequestDto = new AddressRequestDto();
+            addressRequestDto.setLane1(lane1);
+            addressRequestDto.setLane2(lane2);
+            addressRequestDto.setZip(zip);
+            addressRequestDto.setState(state);
+            AddressResponseDto addressResponseDto = addressClient.savingAddress(addressRequestDto);
+            //RESPONSE
+            if(userResponseDto != null){
+                bnsUserResponseDto.setUserResponseDto(userResponseDto);
             }
-            if (e instanceof FeignException.ServiceUnavailable) {
-                logger.error("CLIENT IS UNAVAILABLE");
-                throw new Exception("client unavailable");
+            if(userImageResponseDto != null){
+                bnsUserResponseDto.setUserImageResponseDto(userImageResponseDto);
             }
-            if (e instanceof FeignException.BadRequest) {
-                logger.warn("PRODUCT FOR THIS SELLER NOT FOUND");
-                throw new Exception("bad request - product with this id not found");
+            if(addressResponseDto != null){
+                bnsUserResponseDto.setAddressResponseDto(addressResponseDto);
             }
         }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return bnsUserResponseDto;
+    }
 
-        return "Product successfully deleted";
+
+
+
+
+    //UPDATE USER
+    @PreAuthorize("isAuthenticated()")
+    public BNSUserResponseDto updateRestUser(String firstname, String lastname, String gender, String email, MultipartFile image, String lane1, String lane2, String zip, String state, Long id) throws Exception {
+        BNSUserResponseDto bnsUserResponseDto = new BNSUserResponseDto();
+        try{
+            //user
+            UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
+            userUpdateRequestDto.setFirstname(firstname);
+            userUpdateRequestDto.setLastname(lastname);
+            userUpdateRequestDto.setGender(gender);
+            userUpdateRequestDto.setEmail(email);
+            UserResponseDto userResponseDto = userRestService.updateUserById(userUpdateRequestDto, id);
+            //image
+            ImageRequest imageRequest = new ImageRequest();
+            imageRequest.setName(image.getOriginalFilename());
+            imageRequest.setImage(image.getBytes());
+            UserImageResponseDto userImageResponseDto = imageClient.imageUserRestUploading(imageRequest, id);
+            //address
+            AddressRequestDto addressRequestDto = new AddressRequestDto();
+            addressRequestDto.setLane1(lane1);
+            addressRequestDto.setLane2(lane2);
+            addressRequestDto.setZip(zip);
+            addressRequestDto.setState(state);
+            AddressResponseDto addressResponseDto = addressClient.updatingAddressById(addressRequestDto, id);
+            //RESPONSE
+            if(userResponseDto != null){
+                bnsUserResponseDto.setUserResponseDto(userResponseDto);
+            }
+            if(userImageResponseDto != null){
+                bnsUserResponseDto.setUserImageResponseDto(userImageResponseDto);
+            }
+            if(addressResponseDto != null){
+                bnsUserResponseDto.setAddressResponseDto(addressResponseDto);
+            }
+        }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return bnsUserResponseDto;
+    }
+
+
+
+
+
+
+    //GET USER BY ID
+    @PreAuthorize("isAuthenticated()")
+    public BNSUserResponseDto getRestUserById(Long id) throws Exception {
+        BNSUserResponseDto bnsUserResponseDto = new BNSUserResponseDto();
+        try{
+            //user
+            UserResponseDto userResponseDto = userRestService.getUserById(id);
+            //image
+            UserImageResponseDto userImageResponseDto = imageClient.gettingUserRestImageByUserId(id);
+            //address
+            AddressResponseDto addressResponseDto = addressClient.gettingAddressById(id);
+            //RESPONSE
+            if(userResponseDto != null){
+                bnsUserResponseDto.setUserResponseDto(userResponseDto);
+            }
+            if(userImageResponseDto != null){
+                bnsUserResponseDto.setUserImageResponseDto(userImageResponseDto);
+            }
+            if(addressResponseDto != null){
+                bnsUserResponseDto.setAddressResponseDto(addressResponseDto);
+            }
+        }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return bnsUserResponseDto;
+    }
+
+
+
+
+    //GET ALL USERS
+    @PreAuthorize("isAuthenticated()")
+    public List<BNSUserResponseDto> getAllRestUsers() throws Exception {
+        List<BNSUserResponseDto> bnsUserResponseDtoList = new ArrayList<>();
+        try{
+            //user
+            List<UserResponseDto> userResponseDtoList = userRestService.getAllUsers();
+            //RESPONSE
+            for(UserResponseDto userResponseDto : userResponseDtoList){
+                BNSUserResponseDto bnsUserResponseDto = new BNSUserResponseDto();
+                //get image by id
+                UserImageResponseDto userImageResponseDto = imageClient.gettingUserRestImageByUserId(userResponseDto.getId());
+                //get address by id
+                AddressResponseDto addressResponseDto = addressClient.gettingAddressById(userResponseDto.getId());
+                bnsUserResponseDto.setUserResponseDto(userResponseDto);
+                bnsUserResponseDto.setUserImageResponseDto(userImageResponseDto);
+                bnsUserResponseDto.setAddressResponseDto(addressResponseDto);
+                bnsUserResponseDtoList.add(bnsUserResponseDto);
+            }
+        }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return bnsUserResponseDtoList;
+    }
+
+
+
+
+    //DELETE USER BY ID
+    public String deleteRestUserById(Long id) throws Exception {
+        try{
+            //delete user
+            userRestService.deleteUserById(id);
+            //delete image
+            imageClient.deletingRestImageById(id);
+            //delete address
+            addressClient.deletingAddressById(id);
+        }
+        catch (FeignException e){
+            throw new Exception(e.getMessage());
+        }
+        return "USER SUCCESSFULLY DELETED";
     }
 
 

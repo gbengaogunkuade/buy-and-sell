@@ -45,7 +45,7 @@ public class TokenServiceImplementation {
 
 
 
-    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, Object>> getTokenInfo(Authentication authentication, JwtAuthenticationToken jwtAuthenticationToken){
         User user = userRepository.findByUsername(authentication.getName());
 

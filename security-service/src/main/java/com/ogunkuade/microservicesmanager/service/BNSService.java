@@ -19,7 +19,7 @@ public class BNSService {
 
 
     public String getHome(){
-        return "home";
+        return "index";
     }
 
 

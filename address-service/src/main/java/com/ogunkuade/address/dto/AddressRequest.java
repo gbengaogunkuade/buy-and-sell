@@ -15,7 +15,6 @@ public class AddressRequest {
     private String lane2;
 
     @NotBlank(message = "zip must not be blank")
-    @Pattern(regexp = "^[1-9]{6}$", message = "Zip must contain only 6 digits")
     private String zip;
 
     @NotBlank(message = "state must not be blank")

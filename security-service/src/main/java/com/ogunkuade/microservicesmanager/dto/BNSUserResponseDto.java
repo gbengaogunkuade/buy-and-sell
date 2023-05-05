@@ -17,6 +17,6 @@ public class BNSUserResponseDto {
     //ADDRESS
     private AddressResponseDto addressResponseDto;
     //IMAGE
-    private UserImageResponseDto imageResponseDto;
+    private UserImageResponseDto userImageResponseDto;
 
 }
