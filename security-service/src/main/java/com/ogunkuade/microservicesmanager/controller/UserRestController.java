@@ -24,6 +24,7 @@ public class UserRestController {
 
     private final UserRestService userRestService;
 
+
     public UserRestController(UserRestService userRestService) {
         this.userRestService = userRestService;
     }

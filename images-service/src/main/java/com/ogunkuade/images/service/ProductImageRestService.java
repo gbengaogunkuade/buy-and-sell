@@ -68,37 +68,6 @@ public class ProductImageRestService {
 
 
 
-//    //POST MULTIPLE IMAGE
-//    public List<ProductImageResponse> imageRestUploadMultiple(MultipartFile[] imageList, Long id) throws IOException {
-//        productImageResponseList = new ArrayList<>();
-//        if(productImageRepository.existsByProductId(id)){
-//            productImageList = productImageRepository.findImagesByProductId(id);
-//            for(ProductImage productImageX : productImageList){
-//                productImageRepository.delete(productImageX);
-//            }
-//        }
-//
-//        for(MultipartFile image : imageList){
-//            productImage = new ProductImage();
-//            productImage.setName(image.getOriginalFilename());
-//            productImage.setImage(image.getBytes());
-//            productImage.setProductId(id);
-//            savedProductImage = productImageRepository.save(productImage);
-//
-//            productImageResponse = new ProductImageResponse();
-//            productImageResponse.setId(savedProductImage.getId());
-//            productImageResponse.setName(savedProductImage.getName());
-//            productImageResponse.setImage(savedProductImage.getImage());
-//            productImageResponse.setProductId(savedProductImage.getProductId());
-//            productImageResponseList.add(productImageResponse);
-//        }
-//        return productImageResponseList;
-//    }
-
-
-
-
-
     //POST MULTIPLE IMAGE
     public List<ProductImageResponse> imageRestUploadMultiple(List<ImageRequest> imageRequestList, Long id) throws IOException {
         productImageResponseList = new ArrayList<>();
@@ -164,6 +133,14 @@ public class ProductImageRestService {
             throw new FileNotFoundException("Image With The Product Id Not Found");
         }
     }
+
+
+
+
+
+
+
+
 
 
 

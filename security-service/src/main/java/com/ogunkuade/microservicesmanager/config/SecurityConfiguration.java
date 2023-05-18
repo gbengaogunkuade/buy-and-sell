@@ -93,6 +93,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/users/**").permitAll()
                 .requestMatchers("/api/internal/users/**").permitAll()
                 .requestMatchers("/api/products/**").permitAll()
+                .requestMatchers("/gui/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()

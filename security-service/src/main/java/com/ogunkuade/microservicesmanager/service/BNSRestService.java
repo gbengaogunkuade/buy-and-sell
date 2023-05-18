@@ -15,6 +15,8 @@ import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -147,10 +149,38 @@ public class BNSRestService {
 
 
 
+//
+//    //GET PRODUCT BY ID
+////    @PreAuthorize("isAuthenticated()")
+//    public BNSProductResponseDto getProductById(Long id) throws Exception {
+//        BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
+//        try{
+//            //get product
+//            ProductResponseDto productResponseDto = productClient.gettingProductById(id);
+//            //get productImage
+//            List<ProductImageResponseDto> productImageResponseDtoList = imageClient.gettingRestImageByProductId(id);
+//            if(productResponseDto != null){
+//                bnsProductResponseDto.setProductResponseDto(productResponseDto);
+//            }
+//            if(productImageResponseDtoList != null){
+//                bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
+//            }
+//        }
+//        catch (FeignException e){
+//            throw new Exception(e.getMessage());
+//        }
+//        return bnsProductResponseDto;
+//    }
+
+
+
+
+
+
 
     //GET PRODUCT BY ID
 //    @PreAuthorize("isAuthenticated()")
-    public BNSProductResponseDto getProductById(Long id) throws Exception {
+    public ResponseEntity<BNSProductResponseDto> getProductById(Long id) throws Exception {
         BNSProductResponseDto bnsProductResponseDto = new BNSProductResponseDto();
         try{
             //get product
@@ -164,11 +194,19 @@ public class BNSRestService {
                 bnsProductResponseDto.setProductImageResponseDtoList(productImageResponseDtoList);
             }
         }
-        catch (FeignException e){
+        catch (Exception e){
             throw new Exception(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BNSProductResponseDto());
         }
-        return bnsProductResponseDto;
+        return ResponseEntity.status(HttpStatus.OK).body(bnsProductResponseDto);
     }
+
+
+
+
+
+
+
 
 
 

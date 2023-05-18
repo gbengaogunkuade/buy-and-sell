@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +34,7 @@ public class BNSRestController {
 
 
 
-//PRODUCT
+//PRODUCT-------------------------------------------------------------------
 
     //CREATE PRODUCT
     @PostMapping("/products/create")
@@ -67,7 +68,7 @@ public class BNSRestController {
 
     //GET PRODUCT BY ID
     @GetMapping("/products/{id}")
-    public BNSProductResponseDto gettingProductById(@PathVariable Long id) throws Exception {
+    public ResponseEntity<BNSProductResponseDto> gettingProductById(@PathVariable Long id) throws Exception {
         return bnsRestService.getProductById(id);
     }
 
@@ -110,7 +111,7 @@ public class BNSRestController {
 
 
 
-//USER
+//USER----------------------------------------------------------------------
 
     //CREATE USER
     @PostMapping("/users/create")

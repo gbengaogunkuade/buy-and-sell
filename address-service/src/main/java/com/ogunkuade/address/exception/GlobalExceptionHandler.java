@@ -32,6 +32,8 @@ public class GlobalExceptionHandler {
     }
 
 
+
+
     //_______EXCEPTION HANDLER FOR AddressNotFoundException_________
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleAddressNotFoundException(AddressNotFoundException addressNotFoundException){
@@ -41,12 +43,15 @@ public class GlobalExceptionHandler {
 
 
 
+
     //__________EXCEPTION HANDLER FOR OTHER Exceptions_________
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception){
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "EXCEPTION", exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
+
+
 
 
 }

@@ -1,20 +1,21 @@
-package com.ogunkuade.images.dto;
+package com.ogunkuade.microservicesmanager.dto;
 
 
 import lombok.*;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class UserImageResponse {
+public class GUI_ProductImageResponse {
 
     private Long id;
     private String name;
-    private byte[] image;
-    private Long userId;
+    private String convertedImage;
+
 
 }
+
+
 
